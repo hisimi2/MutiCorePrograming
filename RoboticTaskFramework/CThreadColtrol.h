@@ -1,5 +1,5 @@
 #pragma once
-#include "../Framework/CAbsThread.h"
+#include "Framework/CAbsThread.h"
 #include "COPSwitch.h"
 #include "CRobot.h"
 

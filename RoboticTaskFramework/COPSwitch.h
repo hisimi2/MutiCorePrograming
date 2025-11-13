@@ -1,6 +1,6 @@
 #pragma once
-#include "../Framework/CAbsThread.h"
-#include "../Framework/IOPSwitch.h"
+#include "Framework/CAbsThread.h"
+#include "Framework/IOPSwitch.h"
 #include "CTimer.h"
 #include <vector>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Framework/IStep.h"
+#include "Framework/IStep.h"
 
 // CRobotReadyStep ¼±¾ð
 class CRobotReadyStep : public IStep

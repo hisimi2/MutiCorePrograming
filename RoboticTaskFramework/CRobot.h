@@ -1,6 +1,6 @@
 #pragma once
-#include "../Framework/CUnit.h"
-#include "../Framework/IOPSwitch.h"
+#include "Framework/CUnit.h"
+#include "Framework/IOPSwitch.h"
 #include "CCylinder.h"
 #include "CRobotReadyStep.h"
 #include <memory>

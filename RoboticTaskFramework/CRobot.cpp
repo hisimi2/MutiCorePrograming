@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include <memory> // std::unique_ptr를 위해 추가
-#include "../Framework/IStep.h"
+#include "Framework/IStep.h"
 #include "CRobot.h"
 
 CRobot::CRobot(IOPSwitch& startSwitch)

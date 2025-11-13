@@ -187,7 +187,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Framework\CAbsThread.h" />
-    <ClInclude Include="..\Framework\IOPSwitch.h" />
     <ClInclude Include="CAxisController.h" />
     <ClInclude Include="CCylinder.h" />
     <ClInclude Include="CRobotReadyStep.h" />
@@ -195,6 +194,10 @@
     <ClInclude Include="COPSwitch.h" />
     <ClInclude Include="CRobot.h" />
     <ClInclude Include="CTimer.h" />
+    <ClInclude Include="Framework\CAbsThread.h" />
+    <ClInclude Include="Framework\CUnit.h" />
+    <ClInclude Include="Framework\IOPSwitch.h" />
+    <ClInclude Include="Framework\IStep.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RunStopSequence.h" />
     <ClInclude Include="RunStopSequenceDlg.h" />
@@ -202,8 +205,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Framework\CAbsThread.cpp" />
-    <ClCompile Include="..\Framework\CUnit.cpp" />
     <ClCompile Include="CAxisController.cpp" />
     <ClCompile Include="CCylinder.cpp" />
     <ClCompile Include="CRobotReadyStep.cpp" />
@@ -211,6 +212,8 @@
     <ClCompile Include="COPSwitch.cpp" />
     <ClCompile Include="CRobot.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="Framework\CAbsThread.cpp" />
+    <ClCompile Include="Framework\CUnit.cpp" />
     <ClCompile Include="RunStopSequence.cpp" />
     <ClCompile Include="RunStopSequenceDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
