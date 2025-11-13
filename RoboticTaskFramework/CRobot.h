@@ -3,11 +3,12 @@
 #include "Framework/IOPSwitch.h"
 #include "CCylinder.h"
 #include "CRobotReadyStep.h"
+#include "CRobotPickStep.h"
 #include <memory>
-
 
 class CRobot : public CUnit
 {
+
 public:
 	CRobot(IOPSwitch& startSwitch);
 	~CRobot();

@@ -152,12 +152,11 @@ HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 
 CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_MainThread(m_StartSwitch)
+	, m_Robot(m_StartSwitch)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
-	m_MainThread.resume();
 }
+
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {

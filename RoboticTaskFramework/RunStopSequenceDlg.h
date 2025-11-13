@@ -3,15 +3,14 @@
 //
 
 #pragma once
-
-#include "CThreadColtrol.h"
-
-
+#include "COPSwitch.h"
+#include "CRobot.h"
 // CRunStopSequenceDlg 대화 상자
 class CRunStopSequenceDlg : public CDialogEx
 {
 	COPSwitch		m_StartSwitch;
-	CThreadColtrol	m_MainThread;
+	CRobot 			m_Robot;
+
 	
 // 생성입니다.
 public:

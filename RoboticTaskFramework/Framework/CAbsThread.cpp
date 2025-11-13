@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CAbsThread.h"
 
-
 #include <cmath>
 
 CAbsThread::CAbsThread(DWORD dwTimeOut)

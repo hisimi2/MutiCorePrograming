@@ -8,15 +8,20 @@
 IStep* CRobotReadyStep::execute(CUnit* pUnit)
 {
     CRobot* pRobot = static_cast<CRobot*>(pUnit);
-    // TODO: 실제 로직 구현 필요
-    // 예: 다음 스텝으로 전환
-    // return pRobot->m_pPickStep.get(); // .get()으로 원시 포인터 접근
-    return nullptr;
+    
+    // 로봇 Z축을 올리고 그리퍼를 푼다.
+    pRobot->getZ().up();
+    pRobot->getGrip().unclamp();
+
+    // Z축이 올라가고 그리퍼가 풀릴 때까지 기다린다.
+    if (pRobot->getZ().isUp() && pRobot->getGrip().isUnclamp())
+    {
+        // 동작이 완료되면 다음 단계인 PickStep으로 전환한다.
+        return pRobot->m_pPickStep.get(); 
+    }
+
+    // 아직 동작이 완료되지 않았으면 현재 단계를 유지한다.
+    return this;
 }
 
-// CRobotPickStep 클래스의 execute 함수 정의
-IStep* CRobotPickStep::execute(CUnit* pUnit)
-{
-    // TODO: 실제 로직 구현 필요
-    return nullptr;
-}
+
