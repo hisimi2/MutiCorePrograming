@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36616.10 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunStopSequence", "RunStopSequence\RunStopSequence.vcxproj", "{D09D56AE-25E6-434B-9E67-24140285BAB6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RoboticTaskFramework", "RoboticTaskFramework\RoboticTaskFramework.vcxproj", "{D09D56AE-25E6-434B-9E67-24140285BAB6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PreviousStartStop", "PreviousStartStop\PreviousStartStop.vcxproj", "{F17CF42C-0865-4A59-8E25-C9BFD5075117}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{D09D56AE-25E6-434B-9E67-24140285BAB6}.Release|x64.Build.0 = Release|x64
 		{D09D56AE-25E6-434B-9E67-24140285BAB6}.Release|x86.ActiveCfg = Release|Win32
 		{D09D56AE-25E6-434B-9E67-24140285BAB6}.Release|x86.Build.0 = Release|Win32
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Debug|x64.ActiveCfg = Debug|x64
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Debug|x64.Build.0 = Debug|x64
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Debug|x86.ActiveCfg = Debug|Win32
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Debug|x86.Build.0 = Debug|Win32
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Release|x64.ActiveCfg = Release|x64
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Release|x64.Build.0 = Release|x64
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Release|x86.ActiveCfg = Release|Win32
+		{F17CF42C-0865-4A59-8E25-C9BFD5075117}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D09D56AE-25E6-434B-9E67-24140285BAB6}</ProjectGuid>
+    <ProjectGuid>{F17CF42C-0865-4A59-8E25-C9BFD5075117}</ProjectGuid>
     <RootNamespace>RunStopSequence</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
