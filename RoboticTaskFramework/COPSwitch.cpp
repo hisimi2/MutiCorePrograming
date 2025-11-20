@@ -58,14 +58,17 @@ void COPSwitch::setBlink(bool bStatus)
 void COPSwitch::setLED(bool bStatus)
 {
 	// m_pDIO가 유효하면 실제 출력 호출
+	std::lock_guard<std::mutex> lk(m_dioMutex);
 	for (int nIndex = 0; nIndex < static_cast<int>(m_outputs.size()); nIndex++)
 	{
+		// IDio 구현이 자체 동기화를 제공하지 않으면 이 락이 필요합니다.
 		m_DIO.out(m_outputs[nIndex], bStatus);
 	}
 }
 
 bool COPSwitch::checkInSensor()
 {
+	std::lock_guard<std::mutex> lk(m_dioMutex);
 	for (int nIndex = 0; nIndex < static_cast<int>(m_inputs.size()); nIndex++)
 	{
 		if (m_DIO.in(m_inputs[nIndex]))

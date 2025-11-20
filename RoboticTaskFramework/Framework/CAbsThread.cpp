@@ -3,13 +3,15 @@
 #include <chrono>
 
 CAbsThread::CAbsThread()
-	: m_bExit(false), m_bPaused(true) // 생성 시 초기 상태는 '일시정지'
+	: m_bExit(false), m_bPaused(true)
 {
 }
 
 CAbsThread::~CAbsThread()
 {
+	// 안전하게 종료 요청
 	setEnd();
+
 	// notify in case thread is waiting
 	{
 		std::lock_guard<std::mutex> lk(m_mtx);
@@ -18,7 +20,14 @@ CAbsThread::~CAbsThread()
 
 	if (m_thread.joinable())
 	{
-		m_thread.join(); // 스레드가 종료될 때까지 안전하게 대기
+		try
+		{
+			m_thread.join();
+		}
+		catch (...)
+		{
+			// join 중 예외가 올라오면 무시하여 소멸자에서 예외 발생 방지
+		}
 	}
 }
 
@@ -29,15 +38,24 @@ void CAbsThread::create()
 
 	// reset flags
 	m_bExit.store(false);
-	// 스레드 생성
-	m_thread = std::thread(&CAbsThread::threadProc, this);
+	// 스레드 생성 (예외 안전하게)
+	try
+	{
+		m_thread = std::thread(&CAbsThread::threadProc, this);
+	}
+	catch (...)
+	{
+		// 생성 실패 시 상태를 복구
+		m_bExit.store(true);
+		throw;
+	}
 }
 
 void CAbsThread::suspend()
 {
 	create(); // 스레드가 없으면 생성
 	m_bPaused.store(true);
-	// notify to ensure thread re-evaluates condition promptly
+	// wake up to re-evaluate immediately
 	m_cv.notify_all();
 }
 
@@ -88,13 +106,12 @@ void CAbsThread::threadProc()
 			}
 			catch (...)
 			{
-				// 예외는 로그를 남기거나 무시. 여기선 안전하게 흡수하여 스레드 종료를 방해하지 않음.
+				// 예외는 로그를 남기거나 흡수. 스레드가 멈추지 않도록 함.
 			}
 
-			// 짧은 대기: condition_variable::wait_for 를 사용해서 setEnd() 호출 시 즉시 깨어나도록 함
+			// 짧은 대기: 즉시 종료 또는 일시정지 반영을 위해 condition_variable::wait_for 사용
 			{
 				std::unique_lock<std::mutex> lk(m_mtx);
-				// 1ms 대기 동안 exit 또는 pause 신호가 오면 즉시 반응
 				m_cv.wait_for(lk, milliseconds(1), [this](){ return m_bExit.load() || m_bPaused.load(); });
 			}
 		}

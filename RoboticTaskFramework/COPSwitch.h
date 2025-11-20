@@ -6,6 +6,7 @@
 #include <chrono>
 #include "IDio.h"
 #include "Framework/CAbsThread.h"
+#include <mutex>
 
 // COPSwitch: I/O 스위치 제어 클래스
 class COPSwitch : public CAbsThread, public IOPSwitch
@@ -57,5 +58,8 @@ private:
 	unsigned int m_pollIntervalMs = 100;
 	// 마지막으로 실제 작업을 수행한 시점
 	std::chrono::steady_clock::time_point m_lastPoll;
+
+	// DIO 접근 동기화 (IDio 구현이 자체 동기화를 제공하지 않으면 필요)
+	mutable std::mutex m_dioMutex;
 };
 
