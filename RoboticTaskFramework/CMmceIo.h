@@ -1,13 +1,18 @@
 #pragma once
 #include "IDio.h"
-class CMmceIo : public IDio
+#include "./Framework/CAbsThread.h"
+
+class CMmceIo : public IDio, CAbsThread
 {
-	public:
+	int	sequence() override; 
+
+public:
 	CMmceIo();
 	~CMmceIo() override;
 	void out(int nChannel, bool bStatus) override;
 	bool out(int nChannel) override;
 	bool in(int nChannel) override;
+
 
 };
 

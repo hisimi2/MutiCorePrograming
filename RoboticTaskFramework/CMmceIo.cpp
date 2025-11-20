@@ -9,19 +9,23 @@ CMmceIo::~CMmceIo()
 }
 void CMmceIo::out(int nChannel, bool bStatus)
 {
-	// MMCE 하드웨어에 출력 신호를 설정하는 코드 구현
-	// 예: MMCE_SetOutput(nChannel, bStatus);
+	// 출력번호의 데이터를 Bit연산하여 전체 출력 byte에 반영하는 코드 구현
 }
 bool CMmceIo::out(int nChannel)
 {
-	// MMCE 하드웨어에서 출력 신호 상태를 읽는 코드 구현
-	// 예: return MMCE_GetOutput(nChannel);
+	// 전체 출력 byte를 가지고 해당 nChannel의 상태를 Bit연산으로 추출하는 코드 구현
 	return false; // 자리 표시자 반환값
 }
 bool CMmceIo::in(int nChannel)
 {
-	// MMCE 하드웨어에서 입력 신호 상태를 읽는 코드 구현
-	// 예: return MMCE_GetInput(nChannel);
+	// 전체 입력 byte를 가지고 해당 nChannel의 상태를 Bit연산으로 추출하는 코드 구현
 	return false; // 자리 표시자 반환값
 }
+
+int	CMmceIo::sequence() 
+{
+	// 전체 출력 bytes를 MMCE 하드웨어에서 설정하는 코드 구현
+	// 전체 입력 bytes에 MMCE 하드웨어에서 읽어오는 코드 구현
+	return 0; 
+};
 
