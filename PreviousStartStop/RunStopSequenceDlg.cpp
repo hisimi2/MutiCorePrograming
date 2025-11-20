@@ -1,4 +1,3 @@
-
 // RunStopSequenceDlg.cpp : 구현 파일
 //
 
@@ -152,6 +151,7 @@ HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 
 CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
+	, m_StartSwitch(/* 적절한 인자 전달 필요 */)
 	, m_MainThread(m_StartSwitch)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);

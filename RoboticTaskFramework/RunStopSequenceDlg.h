@@ -1,15 +1,17 @@
-
 // RunStopSequenceDlg.h : 헤더 파일
 //
 
 #pragma once
-#include "COPSwitch.h"
 #include "CRobot.h"
+#include "CMmceIo.h"
+#include "COPSwitch.h"
+
 // CRunStopSequenceDlg 대화 상자
 class CRunStopSequenceDlg : public CDialogEx
 {
-	COPSwitch		m_StartSwitch;
-	CRobot 			m_Robot;
+	CMmceIo			m_io;          // DIO 객체
+	COPSwitch		m_StartSwitch; // 로봇의 내부 로직용 스위치
+	CRobot 			m_Robot;          // 로봇 객체 (이제 스레드를 포함)
 
 	
 // 생성입니다.
@@ -38,4 +40,7 @@ protected:
 public:
 	afx_msg void OnBnClickedRun();
 	afx_msg void OnBnClickedStop();
+	afx_msg void OnDestroy(); // OnDestroy 핸들러 추가
+	// UI 타이머 이벤트 핸들러
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

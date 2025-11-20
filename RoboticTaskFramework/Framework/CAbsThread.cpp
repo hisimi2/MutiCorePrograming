@@ -1,105 +1,66 @@
 #include "stdafx.h"
 #include "CAbsThread.h"
+#include <chrono>
 
-#include <cmath>
-
-CAbsThread::CAbsThread(DWORD dwTimeOut)
+CAbsThread::CAbsThread()
+	: m_bExit(false), m_bPaused(true) // 생성 시 초기 상태는 '일시정지'
 {
-	m_dwTimeOut = dwTimeOut;
-	m_nStatus = eNOT_EXIST;
-	m_bExit = false;
-	m_dwTimeOut = eTIMEOUT;
 }
 
 CAbsThread::~CAbsThread()
 {
-	if (eNOT_EXIST == m_nStatus)
+	setEnd();
+	if (m_thread.joinable())
 	{
-		return;
-	}
-
-	DWORD dwExit = 0;
-	::GetExitCodeThread(m_hThread, &dwExit); // dwExit Value = FuncProc's Return Value;
-	if (STILL_ACTIVE == dwExit)
-	{
-		DWORD dwCheck = 0;
-		dwCheck = ::WaitForSingleObject(m_hThread, m_dwTimeOut);
-		if (WAIT_TIMEOUT == dwCheck)
-		{
-			::TerminateThread(m_hThread, 0);
-		}
+		m_thread.join(); // 스레드가 종료될 때까지 안전하게 대기
 	}
 }
 
-int CAbsThread::create()
+void CAbsThread::create()
 {
-	if (eNOT_EXIST == m_nStatus)
+	if (!m_thread.joinable())
 	{
-		m_pThread = ::AfxBeginThread(ThreadProc, this, THREAD_PRIORITY_HIGHEST, 0, CREATE_SUSPENDED, NULL);
-		m_hThread = m_pThread->m_hThread;
-		m_nStatus = eSUSPEND;
-
-		SYSTEM_INFO siSysInfo;
-		GetSystemInfo(&siSysInfo);
-
-		int nMaxCore = (int)siSysInfo.dwNumberOfProcessors;
-		int nSelectCore = nMaxCore - 3;
-		if (0 > nSelectCore)
-		{
-			nSelectCore = 0;
-		}
-		int nBit = static_cast<int>(pow(2.0, nSelectCore) + 0.5);
-
-		// 스레드의 Core 5를 지정한다. 
-		SetThreadAffinityMask(m_pThread->m_hThread, nBit);
+		m_thread = std::thread(&CAbsThread::threadProc, this);
 	}
-
-	return m_nStatus;
 }
 
-int CAbsThread::suspend()
+void CAbsThread::suspend()
 {
-	create();
-
-	if (eRUN == m_nStatus)
-	{
-		m_nStatus = eSUSPEND;
-		m_pThread->SuspendThread();
-	}
-
-	return m_nStatus;
+	create(); // 스레드가 없으면 생성
+	m_bPaused = true;
 }
 
-int CAbsThread::resume()
+void CAbsThread::resume()
 {
-	create();
-
-	if (eSUSPEND == m_nStatus)
-	{
-		m_nStatus = eRUN;
-		m_pThread->ResumeThread();
-	}
-
-	return m_nStatus;
+	create(); // 스레드가 없으면 생성
+	m_bPaused = false;
 }
 
 void CAbsThread::setEnd()
 {
 	m_bExit = true;
+	m_bPaused = false; // 종료 시 대기 상태를 해제하여 루프가 빠져나올 수 있도록 함
 }
 
 int CAbsThread::isThreadStatus()
 {
-	return m_nStatus;
+	if (!m_thread.joinable()) return eNOT_EXIST;
+	if (m_bPaused) return eSUSPEND;
+	return eRUN;
 }
 
-UINT CAbsThread::ThreadProc(LPVOID lpParam)
+void CAbsThread::threadProc()
 {
-	CAbsThread* pObject = (CAbsThread*)lpParam;
-	while (!pObject->m_bExit)
+	while (!m_bExit)
 	{
-		pObject->sequence();
-		Sleep(1);
+		if (m_bPaused)
+		{
+			// 일시정지 상태일 때 CPU 낭비 없이 대기
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+
+		sequence(); // 실제 작업 수행
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-	return 0;
 }

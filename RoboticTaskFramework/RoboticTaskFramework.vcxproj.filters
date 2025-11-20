@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CAxisController.cpp" />
+    <ClCompile Include="CCylinder.cpp" />
+    <ClCompile Include="CRobotPickStep.cpp" />
+    <ClCompile Include="CRobotReadyStep.cpp" />
+    <ClCompile Include="CRobot.cpp" />
+    <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="Framework\CAbsThread.cpp" />
+    <ClCompile Include="RunStopSequence.cpp" />
+    <ClCompile Include="RunStopSequenceDlg.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Framework\CUnit.cpp" />
+    <ClCompile Include="COPSwitch.cpp">
+      <Filter>IOPSwitch</Filter>
+    </ClCompile>
+    <ClCompile Include="CMmceIo.cpp">
+      <Filter>IDIO</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CAxisController.h" />
+    <ClInclude Include="CCylinder.h" />
+    <ClInclude Include="CRobotPickStep.h" />
+    <ClInclude Include="CRobotReadyStep.h" />
+    <ClInclude Include="CRobot.h" />
+    <ClInclude Include="Framework\CAbsThread.h" />
+    <ClInclude Include="Framework\CUnit.h" />
+    <ClInclude Include="Framework\IStep.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="RunStopSequence.h" />
+    <ClInclude Include="RunStopSequenceDlg.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="COPSwitch.h">
+      <Filter>IOPSwitch</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\IOPSwitch.h">
+      <Filter>IOPSwitch</Filter>
+    </ClInclude>
+    <ClInclude Include="IDio.h">
+      <Filter>IDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CMmceIo.h">
+      <Filter>IDIO</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RunStopSequence.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\RunStopSequence.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\RunStopSequence.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="IOPSwitch">
+      <UniqueIdentifier>{281aecbb-8011-4e2c-b10b-bc56f4062fed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IDIO">
+      <UniqueIdentifier>{2bdc92d5-5a2b-408e-9882-52e2f9103162}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,52 +1,52 @@
 #include "stdafx.h"
 #include "COPSwitch.h"
+#include <thread>
+#include <chrono>
 
 COPSwitch::~COPSwitch()
 {
-	this->setEnd();
-	Sleep(100);
-	if (m_pnIns)
+	// 내부 스레드 안전 종료
+	m_threadExit.store(true);
+	if (m_thread.joinable())
 	{
-		delete m_pnIns;
+		m_thread.join();
 	}
-	if (m_pnOuts)
+	// m_pDIO는 소유권을 가지지 않으므로 delete 하지 않습니다.
+}
+
+// 기존 생성자 시그니처를 헤더와 일치하도록 변경
+COPSwitch::COPSwitch(IDio& Dio)
+	: m_DIO(Dio)
+	, m_BlinkTimer(0.5) // CTimer 기본 생성자 호출
+{
+	// 필요한 초기화 코드 추가
+}
+
+void COPSwitch::threadLoop()
+{
+	using namespace std::chrono;
+	while (!m_threadExit.load())
 	{
-		delete m_pnOuts;
+		sequence();
+		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<std::chrono::milliseconds::rep>(m_pollIntervalMs)));
 	}
 }
 
-void COPSwitch::setInput(int nCount, int ...)
+void COPSwitch::setOption(EType type, bool isBlink, unsigned int pollIntervalMs)
 {
-	if (m_pnIns)
-	{
-		delete m_pnIns;
-	}
-	m_nInputCount = nCount;
-	m_pnIns = new int[nCount];
-	va_list list;
-	va_start(list, nCount);
-	for (int nIndex = 0; nIndex < nCount; nIndex++)
-	{
-		m_pnIns[nIndex] = va_arg(list, int);
-	}
-	va_end(list);
+	m_type = type;
+	m_isBlink = isBlink;
+	m_pollIntervalMs = pollIntervalMs;
 }
 
-void COPSwitch::setOutput(int nCount, int ...)
+void COPSwitch::setInput(const std::vector<int>& inputs)
 {
-	if (m_pnOuts)
-	{
-		delete m_pnOuts;
-	}
-	m_nOutputCount = nCount;
-	m_pnOuts = new int[nCount];
-	va_list list;
-	va_start(list, nCount);
-	for (int nIndex = 0; nIndex < nCount; nIndex++)
-	{
-		m_pnOuts[nIndex] = va_arg(list, int);
-	}
-	va_end(list);
+	m_inputs = inputs;
+}
+
+void COPSwitch::setOutput(const std::vector<int>& outputs)
+{
+	m_outputs = outputs;
 }
 
 void COPSwitch::setGroup(COPSwitch* pObject)
@@ -56,27 +56,28 @@ void COPSwitch::setGroup(COPSwitch* pObject)
 
 void COPSwitch::setStatus(BOOL bStatus)
 {
-	m_bStatus = bStatus;
+	m_status.store(bStatus != FALSE);
 }
 
-void COPSwitch::setBlink(BOOL bStatus)
+void COPSwitch::setBlink(bool bStatus)
 {
-	m_bBlink = bStatus;
+	m_isBlink = bStatus;
 }
 
-void COPSwitch::setLED(BOOL bStatus)
+void COPSwitch::setLED(bool bStatus)
 {
-	for (int nIndex = 0; nIndex < m_nOutputCount; nIndex++)
+	// m_pDIO가 유효하면 실제 출력 호출
+	for (int nIndex = 0; nIndex < static_cast<int>(m_outputs.size()); nIndex++)
 	{
-		//m_pDIO->out(m_pnOuts[nIndex], bStatus);
+		m_DIO.out(m_outputs[nIndex], bStatus);
 	}
 }
 
-BOOL COPSwitch::checkInSensor()
+bool COPSwitch::checkInSensor()
 {
-	for (int nIndex = 0; nIndex < m_nInputCount; nIndex++)
+	for (int nIndex = 0; nIndex < static_cast<int>(m_inputs.size()); nIndex++)
 	{
-		if (1)//m_pDIO->in(m_pnIns[nIndex]))
+		if (m_DIO.in(m_inputs[nIndex]))
 		{
 			return true;
 		}
@@ -86,47 +87,46 @@ BOOL COPSwitch::checkInSensor()
 
 BOOL COPSwitch::getStatus()
 {
-	return m_bStatus;
+	return m_status.load() ? TRUE : FALSE;
 }
 
 int COPSwitch::sequence()
 {
 	BOOL	bInCheck = checkInSensor();
-	switch (m_nType)
+	switch (m_type)
 	{
-	case eKEEP:
+	case EType::KEEP:
 		if (bInCheck)
 		{
 			setStatus(TRUE);
-			m_pGroup->setStatus(FALSE);
+			if (m_pGroup) m_pGroup->setStatus(FALSE);
 		}
 		break;
-	case ePUSH:
+	case EType::PUSH:
 		setStatus(bInCheck);
 		break;
-	case eTOGGLE:
-		if (bInCheck && m_bToggleFlag)
+	case EType::TOGGLE:
+		if (bInCheck && m_toggleFlag)	
 		{
-			m_bToggleFlag = false;
-			setStatus(!getStatus());
+			m_toggleFlag = false;
+			setStatus(!getStatus());	
 		}
 
 		if (!bInCheck)
 		{
-			m_bToggleFlag = true;
+			m_toggleFlag = true;
 		}
 		break;
 	default:
 		break;
 	}
 	setLED(getStatus());
-	if (m_bBlink && getStatus())
+	if (this->m_isBlink && getStatus())
 	{
-		// TIME DELAY
 		if (m_BlinkTimer.isOver())
 		{
-			m_bBlinkStatus = !m_bBlinkStatus;
-			setLED(m_bBlinkStatus);
+			m_blinkStatus = !m_blinkStatus;
+			setLED(m_blinkStatus);
 			m_BlinkTimer.startTimer();
 		}
 	}

@@ -1,4 +1,3 @@
-
 // RunStopSequenceDlg.cpp : 구현 파일
 //
 
@@ -24,12 +23,12 @@ public:
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
 // 구현입니다.
 protected:
-	DECLARE_MESSAGE_MAP()
+	DECLARE_MESSAGE_MAP();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -49,8 +48,6 @@ END_MESSAGE_MAP()
 
 
 
-
-
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -62,6 +59,8 @@ BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_RUN, &CRunStopSequenceDlg::OnBnClickedRun)
 	ON_BN_CLICKED(IDC_STOP, &CRunStopSequenceDlg::OnBnClickedStop)
+	ON_WM_DESTROY()
+	// ON_WM_TIMER()  // 더 이상 외부 타이머로 sequence() 호출하지 않음
 END_MESSAGE_MAP()
 
 
@@ -91,12 +90,11 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 		}
 	}
 
-	// 이 대화 상자의 아이콘을 설정합니다.  응용 프로그램의 주 창이 대화 상자가 아닐 경우에는
-	//  프레임워크가 이 작업을 자동으로 수행합니다.
+	// 이 대화 상자의 아이콘을 설정합니다.
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	// 더 이상 UI 타이머로 m_StartSwitch.sequence()를 호출하지 않습니다.
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -113,10 +111,6 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }
-
-// 대화 상자에 최소화 단추를 추가할 경우 아이콘을 그리려면
-//  아래 코드가 필요합니다.  문서/뷰 모델을 사용하는 MFC 응용 프로그램의 경우에는
-//  프레임워크에서 이 작업을 자동으로 수행합니다.
 
 void CRunStopSequenceDlg::OnPaint()
 {
@@ -143,8 +137,6 @@ void CRunStopSequenceDlg::OnPaint()
 	}
 }
 
-// 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
-//  이 함수를 호출합니다.
 HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -152,20 +144,28 @@ HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 
 CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_Robot(m_StartSwitch)
+	, m_StartSwitch(m_io) // m_StartSwitch 초기화
+	, m_Robot(m_StartSwitch) // m_Robot은 m_StartSwitch를 참조하여 생성
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
+void CRunStopSequenceDlg::OnDestroy()
+{
+	CDialogEx::OnDestroy();
+	// m_Robot는 기존대로 안전 종료
+	m_Robot.setEnd();
+	// m_StartSwitch의 내부 스레드는 COPSwitch 소멸자에서 안전히 정리됩니다.
+}
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_StartSwitch.setStatus(true);
+	// 스위치 상태만 변경. sequence()는 COPSwitch 내부 스레드가 주기적으로 실행함.
+	m_StartSwitch.setStatus(TRUE);
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	m_StartSwitch.setStatus(false);
+	// 스위치 상태만 변경.
+	m_StartSwitch.setStatus(FALSE);
 }

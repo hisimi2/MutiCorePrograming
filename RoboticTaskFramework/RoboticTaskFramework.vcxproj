@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="CAxisController.h" />
     <ClInclude Include="CCylinder.h" />
+    <ClInclude Include="CMmceIo.h" />
     <ClInclude Include="CRobotPickStep.h" />
     <ClInclude Include="CRobotReadyStep.h" />
     <ClInclude Include="COPSwitch.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Framework\CUnit.h" />
     <ClInclude Include="Framework\IOPSwitch.h" />
     <ClInclude Include="Framework\IStep.h" />
+    <ClInclude Include="IDio.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RunStopSequence.h" />
     <ClInclude Include="RunStopSequenceDlg.h" />
@@ -207,6 +209,7 @@
   <ItemGroup>
     <ClCompile Include="CAxisController.cpp" />
     <ClCompile Include="CCylinder.cpp" />
+    <ClCompile Include="CMmceIo.cpp" />
     <ClCompile Include="CRobotPickStep.cpp" />
     <ClCompile Include="CRobotReadyStep.cpp" />
     <ClCompile Include="COPSwitch.cpp" />

@@ -58,7 +58,7 @@ BOOL CCylinder::isUp()
 	}
 	for (UINT nIndex = 0; nIndex < m_BSensor.size(); nIndex++)
 	{
-		if (1)// m_pDIO->in(m_BSensor[nIndex]))
+		if (1)// m_pDIO->in(m_BSensor[nIndex])
 		{
 			bPortB = true;
 			break;
@@ -152,7 +152,7 @@ void CCylinder::setName(string& strData)
 
 int CCylinder::up(BOOL bManual)
 {
-	CTimer checkTimeOut(m_dTimer);
+	CTimer checkTimeOut(static_cast<long long>(m_dTimer)); // double → long long 변환 시 명시적 캐스팅 추가
 	upAsync();
 	checkTimeOut.startTimer();
 	while (1)
@@ -174,8 +174,8 @@ int CCylinder::up(BOOL bManual)
 
 int CCylinder::down(BOOL bManual)
 {
-	CTimer checkTimeOut(m_dTimer);
-	downAsync();
+	CTimer checkTimeOut(static_cast<long long>(m_dTimer)); // double → long long 변환 시 명시적 캐스팅 추가
+	downAsync();	
 	checkTimeOut.startTimer();
 	while (1)
 	{
