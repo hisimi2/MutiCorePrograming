@@ -25,16 +25,16 @@ public:
 	COPSwitch& operator=(const COPSwitch&) = delete;
 
 	// IOPSwitch 인터페이스 구현
-	bool getStatus() override;
-	void setStatus(BOOL bStatus) override;
+	bool getSwitchStatus() override;
+	void setSwitchStatus(bool bStatus) override; // BOOL 타입 파라미터로 변경
 
 	// 입/출력 설정
-	void setInput(const std::vector<int>& inputs);
-	void setOutput(const std::vector<int>& outputs);
+	COPSwitch& setInput(const std::vector<int>& inputs);
+	COPSwitch& setOutput(const std::vector<int>& outputs);
 
-	void setGroup(COPSwitch* pObject);
-	void setBlink(bool bStatus);
-	void setOption(EType type, bool isBlink, unsigned int pollIntervalMs); // setDio 선언 추가
+	COPSwitch& setGroup(COPSwitch* pObject);
+	COPSwitch& setBlink(bool bStatus);
+	COPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs); // setDio 선언 추가
 
 private:
 	void setLED(bool bStatus);

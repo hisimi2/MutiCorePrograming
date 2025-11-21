@@ -96,8 +96,6 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 
 	// 각 객체의 백그라운드 스레드를 비동기적으로 시작합니다.
 	// 이 함수들은 즉시 반환되므로 UI 스레드를 막지 않습니다.
-	m_io.resume();
-	m_StartSwitch.resume(); // COPSwitch 스레드 시작
 	m_Robot.resume();     // CRobot 스레드 시작
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -169,11 +167,11 @@ void CRunStopSequenceDlg::OnDestroy()
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
 	// 스위치 상태만 변경. sequence()는 COPSwitch 내부 스레드가 주기적으로 실행함.
-	m_StartSwitch.setStatus(TRUE);
+	m_StartSwitch.setSwitchStatus(true);
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
 	// 스위치 상태만 변경.
-	m_StartSwitch.setStatus(FALSE);
+	m_StartSwitch.setSwitchStatus(false);
 }

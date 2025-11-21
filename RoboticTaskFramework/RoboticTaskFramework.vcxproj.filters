@@ -66,5 +66,8 @@
     <Filter Include="IDIO">
       <UniqueIdentifier>{2bdc92d5-5a2b-408e-9882-52e2f9103162}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{12b3cbd9-ba7f-414f-a22e-1be202d8c482}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

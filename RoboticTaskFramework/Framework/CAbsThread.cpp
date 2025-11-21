@@ -75,6 +75,10 @@ void CAbsThread::setEnd()
 	m_cv.notify_one(); // wait 상태의 스레드를 깨웁니다.
 }
 
+bool CAbsThread::isEnd()
+{
+	return m_bExit.load(std::memory_order_relaxed);
+}
 
 void CAbsThread::threadProc()
 {

@@ -4,6 +4,6 @@
 class IOPSwitch
 {
 public:
-	virtual bool getStatus()=0;
-	virtual void setStatus(BOOL bStatus)=0;
+	virtual bool getSwitchStatus()=0;
+	virtual void setSwitchStatus(bool bStatus)=0;
 };

@@ -3,6 +3,7 @@
 
 CMmceIo::CMmceIo()
 {
+	resume(); // 스레드 시작
 }
 CMmceIo::~CMmceIo()
 {
@@ -26,7 +27,9 @@ bool CMmceIo::sequence()
 {
 	// 전체 출력 bytes를 MMCE 하드웨어에서 설정하는 코드 구현
 	// 전체 입력 bytes에 MMCE 하드웨어에서 읽어오는 코드 구현
-	while (1)
+
+	// 테스트 코드
+	while (!isEnd())
 	{
 		Sleep(10); // 10ms 대기
 	}
