@@ -1,48 +1,44 @@
 #pragma once
-#include <thread>   // std::thread 사용
-#include <atomic>   // std::atomic 사용
+#include <thread>
+#include <atomic>
 #include <mutex>
 #include <condition_variable>
-#include <chrono>
 
 class CAbsThread
 {
 protected:
-	std::thread m_thread;         // CWinThread 대신 std::thread 사용
-	std::atomic<bool> m_bExit;    // 스레드 종료 플래그
-	std::atomic<bool> m_bPaused;  // 스레드 일시정지 플래그
+	std::thread m_thread;
+	std::atomic<bool> m_bExit;
+	std::atomic<bool> m_bPaused;
 
-	// 대기/재개를 위한 동기화 객체
 	std::mutex m_mtx;
 	std::condition_variable m_cv;
+	std::once_flag m_onceFlag; // 스레드를 한 번만 생성하기 위한 플래그
 
-	// 스레드 루프에서 호출되는 실제 작업 (파생 클래스에서 오버라이드)
 	virtual int sequence() { return 0; };
 
-	// 스레드 진입 함수
 	void threadProc();
 
+private:
+	void create();
+
 public:
-	enum _eStatus
+	enum class EState // enum _eStatus -> enum class EState로 변경
 	{
-		eNOT_EXIST = 0,
-		eSUSPEND,
-		eRUN,
+		NotExist = 0,
+		Paused, // Suspend -> Paused
+		Running, // Run -> Running
 	};
 
 	CAbsThread();
 	virtual ~CAbsThread();
 
-	// 복사 금지 (std::thread 멤버를 안전하게 관리하기 위함)
 	CAbsThread(const CAbsThread&) = delete;
 	CAbsThread& operator=(const CAbsThread&) = delete;
 
-	// 스레드 제어
-	void create();    // 스레드 생성 (내부에서 안전하게 1회만 생성)
-	void suspend();   // 협력적 일시정지
-	void resume();    // 협력적 재개 (create() 포함)
-	void setEnd();    // 스레드 종료 신호
+	void pause();   // suspend() -> pause()
+	void resume();
+	void setEnd();
 
-	int isThreadStatus();
+	EState getThreadState(); // 새 메서드 선언
 };
-

@@ -24,7 +24,7 @@ public:
 	COPSwitch& operator=(const COPSwitch&) = delete;
 
 	// IOPSwitch 인터페이스 구현
-	BOOL getStatus() override;
+	bool getStatus() override;
 	void setStatus(BOOL bStatus) override;
 
 	// 입/출력 설정

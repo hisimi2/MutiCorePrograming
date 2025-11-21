@@ -13,7 +13,7 @@ COPSwitch::~COPSwitch()
 // 기존 생성자 시그니처를 헤더와 일치하도록 변경
 COPSwitch::COPSwitch(IDio& Dio)
 	: m_DIO(Dio)
-	, m_BlinkTimer(0.5) // CTimer 기본 생성자 호출
+	, m_BlinkTimer(500) // CTimer 기본 생성자 호출
 	, m_lastPoll(std::chrono::steady_clock::now())
 {
 	// 초기 옵션 설정 가능
@@ -79,7 +79,7 @@ bool COPSwitch::checkInSensor()
 	return false;
 }
 
-BOOL COPSwitch::getStatus()
+bool COPSwitch::getStatus()
 {
 	return m_status.load() ? TRUE : FALSE;
 }
