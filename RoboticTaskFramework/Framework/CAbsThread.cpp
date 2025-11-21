@@ -66,6 +66,8 @@ void CAbsThread::threadProc()
 		if (m_bExit)
 			break;
 
-		sequence();
+		// sequence()의 반환값이 true이면 루프를 탈출하여 스레드를 종료합니다.
+		if (sequence())
+			break;
 	}
 }

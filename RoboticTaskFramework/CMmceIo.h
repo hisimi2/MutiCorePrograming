@@ -4,7 +4,7 @@
 
 class CMmceIo : public IDio, CAbsThread
 {
-	int	sequence() override; 
+	bool sequence() override;
 
 public:
 	CMmceIo();

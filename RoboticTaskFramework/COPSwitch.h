@@ -40,7 +40,7 @@ private:
 	bool checkInSensor();
 
 	// CAbsThread의 가상 함수 오버라이드: 주기 작업을 여기서 수행
-	int sequence() override;
+	bool sequence() override;
 
 	CTimer m_BlinkTimer;
 	std::vector<int> m_inputs;

@@ -15,7 +15,8 @@ protected:
 	std::condition_variable m_cv;
 	std::once_flag m_onceFlag; // 스레드를 한 번만 생성하기 위한 플래그
 
-	virtual int sequence() { return 0; };
+	// sequence()의 반환 타입을 bool로 변경합니다. true를 반환하면 스레드가 종료됩니다.
+	virtual bool sequence() { return false; };
 
 	void threadProc();
 

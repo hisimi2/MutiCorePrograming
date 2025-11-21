@@ -14,7 +14,7 @@ public:
 	// virtual CSomeComponent* getComponent() { return nullptr; }
 
 protected:
-	int sequence() override;
+	bool sequence() override;
 	void setStep(IStep* pStep);
 
 private:

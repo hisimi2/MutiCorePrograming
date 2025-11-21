@@ -16,7 +16,7 @@ void CUnit::setStep(IStep* pStep)
 	m_pCurrentStep = pStep;
 }
 
-int CUnit::sequence()
+bool CUnit::sequence()
 {
 	// 시작 스위치가 꺼져 있으면 대기
 	if (!m_pStartSwitch->getStatus())

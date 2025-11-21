@@ -88,7 +88,7 @@ bool COPSwitch::getStatus()
 // - 호출 빈도는 CAbsThread에 의해 짧게 반복될 수 있으므로
 //   실제 작업은 poll 간격(pollIntervalMs) 기준으로 수행하도록 함.
 // - 이 방식은 긴 블로킹을 피하여 suspend/resume/setEnd에 빠르게 반응하게 함.
-int COPSwitch::sequence()
+bool COPSwitch::sequence()
 {
 	using namespace std::chrono;
 
