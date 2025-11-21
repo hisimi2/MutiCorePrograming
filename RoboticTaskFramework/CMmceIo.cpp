@@ -26,6 +26,11 @@ bool CMmceIo::sequence()
 {
 	// 전체 출력 bytes를 MMCE 하드웨어에서 설정하는 코드 구현
 	// 전체 입력 bytes에 MMCE 하드웨어에서 읽어오는 코드 구현
+	while (1)
+	{
+		Sleep(10); // 10ms 대기
+	}
+
 	return 0; 
 };
 

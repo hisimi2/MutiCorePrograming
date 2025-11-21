@@ -94,7 +94,11 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// 더 이상 UI 타이머로 m_StartSwitch.sequence()를 호출하지 않습니다.
+	// 각 객체의 백그라운드 스레드를 비동기적으로 시작합니다.
+	// 이 함수들은 즉시 반환되므로 UI 스레드를 막지 않습니다.
+	m_io.resume();
+	m_StartSwitch.resume(); // COPSwitch 스레드 시작
+	m_Robot.resume();     // CRobot 스레드 시작
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -147,15 +151,19 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	, m_StartSwitch(m_io) // m_StartSwitch 초기화
 	, m_Robot(m_StartSwitch) // m_Robot은 m_StartSwitch를 참조하여 생성
 {
+	
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CRunStopSequenceDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
-	// m_Robot는 기존대로 안전 종료
+
+	// 다이얼로그 종료 시 모든 스레드에 종료 신호를 보냅니다.
+	// 각 객체의 소멸자가 스레드가 완전히 끝날 때까지 안전하게 기다립니다.
+	m_io.setEnd();
+	m_StartSwitch.setEnd();
 	m_Robot.setEnd();
-	// m_StartSwitch의 내부 스레드는 COPSwitch 소멸자에서 안전히 정리됩니다.
 }
 
 void CRunStopSequenceDlg::OnBnClickedRun()

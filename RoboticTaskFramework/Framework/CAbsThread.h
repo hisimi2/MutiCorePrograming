@@ -13,7 +13,13 @@ protected:
 
 	std::mutex m_mtx;
 	std::condition_variable m_cv;
-	std::once_flag m_onceFlag; 
+	std::once_flag m_onceFlag;
+
+	// --- 소멸자 타임아웃을 위한 멤버 변수 추가 ---
+	std::mutex m_join_mtx;
+	std::condition_variable m_join_cv;
+	bool m_bThreadFinished = false;
+	// -----------------------------------------
 
 	/// <summary>
 	/// sequence()를 구현할 때는 내부에 긴 블로킹(blocking) 호출이나 무한 루프를 만들지 않도록 주의해야 합니다. 
@@ -24,14 +30,16 @@ protected:
 	virtual bool sequence() { return false; };
 
 	void threadProc();
+
+private:
 	void create();
 
 public:
-	enum class EState 
+	enum class EState
 	{
 		NotExist = 0,
-		Paused, 
-		Running, 
+		Paused,
+		Running,
 	};
 
 	CAbsThread();
@@ -40,9 +48,9 @@ public:
 	CAbsThread(const CAbsThread&) = delete;
 	CAbsThread& operator=(const CAbsThread&) = delete;
 
-	void pause();   
+	void pause();
 	void resume();
 	void setEnd();
 
-	EState getThreadState(); // 새 메서드 선언
+	EState getThreadState();
 };

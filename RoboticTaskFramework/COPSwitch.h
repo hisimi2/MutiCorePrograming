@@ -1,17 +1,18 @@
 #pragma once
-#include "Framework/IOPSwitch.h"
+#include "IOPSwitch.h"
 #include "CTimer.h"
 #include <vector>
 #include <atomic>
 #include <chrono>
 #include "IDio.h"
-#include "Framework/CAbsThread.h"
+#include "CAbsThread.h"
 #include <mutex>
 
 // COPSwitch: I/O 스위치 제어 클래스
 class COPSwitch : public CAbsThread, public IOPSwitch
 {
-	IDio& m_DIO;
+	IDio& m_Io;
+	bool m_bStatus;
 public:
 	enum class EType { PUSH, TOGGLE, KEEP };
 

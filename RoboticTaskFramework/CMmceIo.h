@@ -1,8 +1,8 @@
 #pragma once
 #include "IDio.h"
-#include "./Framework/CAbsThread.h"
+#include "CAbsThread.h"
 
-class CMmceIo : public IDio, CAbsThread
+class CMmceIo : public IDio, public CAbsThread
 {
 	bool sequence() override;
 
