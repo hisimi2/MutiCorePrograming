@@ -9,6 +9,8 @@
 #define IDR_MAINFRAME                   128
 #define IDC_RUN                         1000
 #define IDC_STOP                        1001
+#define IDC_LOAD_RECIPE                 1001
+#define IDC_STOP2                       1002
 
 // Next default values for new objects
 // 
