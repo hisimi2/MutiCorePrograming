@@ -105,7 +105,6 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
-
 		CAboutDlg dlgAbout;
 		dlgAbout.DoModal();
 	}
