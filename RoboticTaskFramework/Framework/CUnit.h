@@ -1,10 +1,10 @@
 #pragma once
-#include "CAbsThread.h"
+#include "IPeriodicTask.h"
 #include "IStep.h"
 #include "IOPSwitch.h"
 
 // 모든 로봇, 로더 등의 기반이 되는 추상 유닛 클래스
-class CUnit : public CAbsThread
+class CUnit : public IPeriodicTask
 {
 public:
 	CUnit(IOPSwitch& startSwitch);
@@ -18,6 +18,6 @@ protected:
 	void setStep(IStep* pStep);
 
 private:
-	IStep* m_pCurrentStep;
-	IOPSwitch* m_pStartSwitch;
+	IStep*		m_pCurrentStep;
+	IOPSwitch*	m_pStartSwitch;
 };

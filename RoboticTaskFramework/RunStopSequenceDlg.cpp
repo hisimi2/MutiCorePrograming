@@ -46,7 +46,25 @@ END_MESSAGE_MAP()
 
 // CRunStopSequenceDlg 대화 상자
 
+CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
+	, m_StartSwitch(m_mmceIo) // m_StartSwitch는 m_mmceIo를 참조하여 생성
+	, m_Robot(m_StartSwitch)  // m_Robot은 m_StartSwitch를 참조하여 생성
+{
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+}
 
+CRunStopSequenceDlg::~CRunStopSequenceDlg()
+{
+	// 소멸자가 호출될 때 unique_ptr이 자동으로 메모리를 해제합니다.
+	// 스케줄러 중지 -> 스레드 풀 중지 순서를 보장하기 위해 명시적으로 reset 호출
+	if (m_pScheduler)
+	{
+		m_pScheduler->stop();
+	}
+	m_pScheduler.reset();
+	m_pThreadPool.reset();
+}
 
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -60,7 +78,6 @@ BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RUN, &CRunStopSequenceDlg::OnBnClickedRun)
 	ON_BN_CLICKED(IDC_STOP, &CRunStopSequenceDlg::OnBnClickedStop)
 	ON_WM_DESTROY()
-	// ON_WM_TIMER()  // 더 이상 외부 타이머로 sequence() 호출하지 않음
 END_MESSAGE_MAP()
 
 
@@ -94,9 +111,33 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// 각 객체의 백그라운드 스레드를 비동기적으로 시작합니다.
-	// 이 함수들은 즉시 반환되므로 UI 스레드를 막지 않습니다.
-	m_Robot.resume();     // CRobot 스레드 시작
+	// --- 스레드 풀 및 스케줄러 초기화 ---
+
+	// 1. CTPL 스레드 풀 생성 (예: 하드웨어 코어 수만큼)
+	unsigned int core_count = std::thread::hardware_concurrency();
+	m_pThreadPool = std::make_unique<ctpl::thread_pool>(core_count > 0 ? core_count : 4);
+
+	// 2. 스케줄러 생성 (예: 10ms 주기)
+	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
+
+	// 3. 작업(Task) 객체들 생성 및 스케줄러에 등록
+	// 예: 스위치 100개 생성 (복사 불가능하므로 unique_ptr로 동적 할당)
+	for (int i = 0; i < 100; ++i)
+	{
+		m_switches.push_back(std::make_unique<COPSwitch>(m_mmceIo));
+	}
+
+	// 스케줄러에 모든 작업 등록
+	m_pScheduler->addTask(&m_mmceIo);
+	m_pScheduler->addTask(&m_StartSwitch);
+	m_pScheduler->addTask(&m_Robot);
+	for (const auto& sw : m_switches)
+	{
+		m_pScheduler->addTask(sw.get());
+	}
+
+	// 4. 스케줄러 시작
+	m_pScheduler->start();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -144,29 +185,17 @@ HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_StartSwitch(m_io) // m_StartSwitch 초기화
-	, m_Robot(m_StartSwitch) // m_Robot은 m_StartSwitch를 참조하여 생성
-{
-	
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-}
-
 void CRunStopSequenceDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
 
-	// 다이얼로그 종료 시 모든 스레드에 종료 신호를 보냅니다.
-	// 각 객체의 소멸자가 스레드가 완전히 끝날 때까지 안전하게 기다립니다.
-	m_io.setEnd();
-	m_StartSwitch.setEnd();
-	m_Robot.setEnd();
+	// 소멸자에서 스레드 풀과 스케줄러를 정리하므로 OnDestroy에서 별도 처리 필요 없음
+	// setEnd() 호출들은 모두 제거
 }
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
-	// 스위치 상태만 변경. sequence()는 COPSwitch 내부 스레드가 주기적으로 실행함.
+	// 스위치 상태만 변경. sequence()는 스케줄러가 주기적으로 실행함.
 	m_StartSwitch.setSwitchStatus(true);
 }
 

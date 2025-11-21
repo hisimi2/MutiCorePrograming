@@ -5,28 +5,32 @@
 #include <atomic>
 #include <chrono>
 #include "IDio.h"
-#include "CAbsThread.h"
+#include "Framework/IPeriodicTask.h" // 경로 수정
 #include <mutex>
 
 // COPSwitch: I/O 스위치 제어 클래스
-class COPSwitch : public CAbsThread, public IOPSwitch
+class COPSwitch : public IPeriodicTask, public IOPSwitch
 {
 	IDio& m_Io;
-	bool m_bStatus;
+	// m_bStatus는 m_status(atomic)으로 대체하여 스레드 안전성 확보
 public:
 	enum class EType { PUSH, TOGGLE, KEEP };
 
-	// pollIntervalMs: 내부에서 실작업을 수행하는 최소 주기 (밀리초)
 	COPSwitch(IDio& Dio);
 	~COPSwitch();
 
-	// 복사 금지 (std::thread 등을 포함하므로 안전하게 비활성화)
+	// 복사 생성자 및 대입 연산자 비활성화
 	COPSwitch(const COPSwitch&) = delete;
 	COPSwitch& operator=(const COPSwitch&) = delete;
 
 	// IOPSwitch 인터페이스 구현
 	bool getSwitchStatus() override;
-	void setSwitchStatus(bool bStatus) override; // BOOL 타입 파라미터로 변경
+	// E1455 오류 수정: IOPSwitch::setSwitchStatus는 'bool'을 파라미터로 받으므로 BOOL이 아닌 bool로 수정합니다.
+	void setSwitchStatus(bool bStatus) override; 
+
+	// IPeriodicTask 인터페이스 구현
+	// E0317 오류 수정: IPeriodicTask::sequence는 'bool'을 반환하므로 void가 아닌 bool로 수정합니다.
+	bool sequence() override;
 
 	// 입/출력 설정
 	COPSwitch& setInput(const std::vector<int>& inputs);
@@ -34,20 +38,17 @@ public:
 
 	COPSwitch& setGroup(COPSwitch* pObject);
 	COPSwitch& setBlink(bool bStatus);
-	COPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs); // setDio 선언 추가
+	COPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs);
 
 private:
 	void setLED(bool bStatus);
 	bool checkInSensor();
 
-	// CAbsThread의 가상 함수 오버라이드: 주기 작업을 여기서 수행
-	bool sequence() override;
-
 	CTimer m_BlinkTimer;
 	std::vector<int> m_inputs;
 	std::vector<int> m_outputs;
 
-	std::atomic<bool> m_status{ false }; // 스레드 안전하게 변경/열람
+	std::atomic<bool> m_status{ false }; // 스레드 안전하게 상태 관리
 	// 토글/블링 상태
 	bool m_toggleFlag = true;
 	bool m_blinkStatus = false;
@@ -55,12 +56,10 @@ private:
 	bool m_isBlink = false;
 	COPSwitch* m_pGroup = nullptr;
 
-	// poll 간격 (밀리초)
+	// poll 간격 (밀리초) - 이제 스케줄러 주기에 의해 제어됨
 	unsigned int m_pollIntervalMs = 100;
-	// 마지막으로 실제 작업을 수행한 시점
-	std::chrono::steady_clock::time_point m_lastPoll;
 
-	// DIO 접근 동기화 (IDio 구현이 자체 동기화를 제공하지 않으면 필요)
+	// DIO 접근 동기화
 	mutable std::mutex m_dioMutex;
 };
 

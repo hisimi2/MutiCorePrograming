@@ -1,8 +1,8 @@
 #pragma once
 #include "IDio.h"
-#include "CAbsThread.h"
+#include "IPeriodicTask.h"
 
-class CMmceIo : public IDio, public CAbsThread
+class CMmceIo : public IDio, public IPeriodicTask
 {
 	bool sequence() override;
 
@@ -12,7 +12,5 @@ public:
 	void out(int nChannel, bool bStatus) override;
 	bool out(int nChannel) override;
 	bool in(int nChannel) override;
-
-
 };
 

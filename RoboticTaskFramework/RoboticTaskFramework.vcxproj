@@ -195,7 +195,7 @@
     <ClInclude Include="COPSwitch.h" />
     <ClInclude Include="CRobot.h" />
     <ClInclude Include="CTimer.h" />
-    <ClInclude Include="Framework\CAbsThread.h" />
+    <ClInclude Include="Framework\IPeriodicTask.h" />
     <ClInclude Include="Framework\CUnit.h" />
     <ClInclude Include="Framework\IOPSwitch.h" />
     <ClInclude Include="Framework\IStep.h" />
@@ -203,6 +203,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RunStopSequence.h" />
     <ClInclude Include="RunStopSequenceDlg.h" />
+    <ClInclude Include="Scheduler.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -215,7 +216,6 @@
     <ClCompile Include="COPSwitch.cpp" />
     <ClCompile Include="CRobot.cpp" />
     <ClCompile Include="CTimer.cpp" />
-    <ClCompile Include="Framework\CAbsThread.cpp" />
     <ClCompile Include="Framework\CUnit.cpp" />
     <ClCompile Include="RunStopSequence.cpp" />
     <ClCompile Include="RunStopSequenceDlg.cpp" />
