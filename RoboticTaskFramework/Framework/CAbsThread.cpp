@@ -9,15 +9,15 @@ CAbsThread::CAbsThread()
 
 CAbsThread::~CAbsThread()
 {
-	setEnd(); // 1. 스레드에 종료를 요청합니다.
+	setEnd(); 
 
 	if (m_thread.joinable())
 	{
 		std::unique_lock<std::mutex> lock(m_join_mtx);
 
-		// 2. m_join_cv를 사용하여 최대 2초 동안 스레드 종료를 기다립니다.
-		//    - 스레드가 정상 종료되면(m_bThreadFinished == true), wait_for는 즉시 true를 반환합니다.
-		//    - 2초가 지나도 종료되지 않으면, wait_for는 false를 반환합니다.
+		// m_join_cv를 사용하여 최대 2초 동안 스레드 종료를 기다립니다.
+		// - 스레드가 정상 종료되면(m_bThreadFinished == true), wait_for는 즉시 true를 반환합니다.
+		// - 2초가 지나도 종료되지 않으면, wait_for는 false를 반환합니다.
 		if (m_join_cv.wait_for(lock, std::chrono::seconds(2), [this] { return this->m_bThreadFinished; }))
 		{
 			// 타임아웃 내에 스레드가 정상 종료된 경우
@@ -52,8 +52,11 @@ void CAbsThread::create()
 void CAbsThread::pause()
 {
 	create();
-	std::unique_lock<std::mutex> lock(m_mtx);
-	m_bPaused = true;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx); // unique_lock 대신 lock_guard 사용 가능
+		m_bPaused = true;
+	}
+	// pause는 스레드를 깨울 필요가 없으므로 notify를 호출하지 않습니다.
 }
 
 void CAbsThread::resume()
@@ -68,13 +71,8 @@ void CAbsThread::resume()
 
 void CAbsThread::setEnd()
 {
-	// m_bExit는 atomic이므로 뮤텍스 없이 안전하게 접근 가능
-	if (!m_bExit)
-	{
-		m_bExit = true;
-		// wait 상태의 스레드를 깨우기 위해 notify 호출
-		m_cv.notify_one();
-	}
+	m_bExit = true;
+	m_cv.notify_one(); // wait 상태의 스레드를 깨웁니다.
 }
 
 
@@ -92,7 +90,8 @@ void CAbsThread::threadProc()
 
 		if (sequence())
 		{
-			m_bExit = true;
+			// sequence()가 종료를 원하면 즉시 루프를 탈출합니다.
+			break;
 		}
 	}
 
