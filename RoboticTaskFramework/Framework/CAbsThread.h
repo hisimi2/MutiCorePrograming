@@ -13,22 +13,25 @@ protected:
 
 	std::mutex m_mtx;
 	std::condition_variable m_cv;
-	std::once_flag m_onceFlag; // 스레드를 한 번만 생성하기 위한 플래그
+	std::once_flag m_onceFlag; 
 
-	// sequence()의 반환 타입을 bool로 변경합니다. true를 반환하면 스레드가 종료됩니다.
+	/// <summary>
+	/// sequence()를 구현할 때는 내부에 긴 블로킹(blocking) 호출이나 무한 루프를 만들지 않도록 주의해야 합니다. 
+	/// 각 sequence() 호출은 짧은 시간 안에 완료되는 작은 작업 단위로 설계하는 것이 좋습니다. 
+	/// 이렇게 하면 setEnd() 호출 시 스레드가 신속하게 반응하여 종료될 수 있습니다.
+	/// </summary>
+	/// <returns></returns>
 	virtual bool sequence() { return false; };
 
 	void threadProc();
-
-private:
 	void create();
 
 public:
-	enum class EState // enum _eStatus -> enum class EState로 변경
+	enum class EState 
 	{
 		NotExist = 0,
-		Paused, // Suspend -> Paused
-		Running, // Run -> Running
+		Paused, 
+		Running, 
 	};
 
 	CAbsThread();
@@ -37,7 +40,7 @@ public:
 	CAbsThread(const CAbsThread&) = delete;
 	CAbsThread& operator=(const CAbsThread&) = delete;
 
-	void pause();   // suspend() -> pause()
+	void pause();   
 	void resume();
 	void setEnd();
 
