@@ -8,7 +8,6 @@
 
 class CRobot : public CUnit
 {
-
 public:
 	CRobot(IOPSwitch& startSwitch);
 	~CRobot();
