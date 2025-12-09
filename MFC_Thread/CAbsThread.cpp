@@ -49,7 +49,7 @@ int CAbsThread::create()
 		{
 			nSelectCore = 0;
 		}
-		int nBit = pow((double)2, nSelectCore);
+		int nBit = static_cast<int>(pow(2.0, nSelectCore));
 
 		// 스레드의 Core 5를 지정한다. 
 		SetThreadAffinityMask(m_pThread->m_hThread, nBit);

@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F17CF42C-0865-4A59-8E25-C9BFD5075117}</ProjectGuid>
-    <RootNamespace>RunStopSequence</RootNamespace>
+    <ProjectGuid>{FBCA745A-9861-49F5-B9F6-014381FA2829}</ProjectGuid>
+    <RootNamespace>thread_pool</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <Keyword>MFCProj</Keyword>
-    <ProjectName>MFC_Thread</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -186,44 +185,31 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CAbsThread.h" />
-    <ClInclude Include="CAxisController.h" />
-    <ClInclude Include="CCylinder.h" />
-    <ClInclude Include="CMmceIo.h" />
-    <ClInclude Include="CRunStopControl.h" />
-    <ClInclude Include="COPSwitch.h" />
-    <ClInclude Include="CRobot.h" />
-    <ClInclude Include="CTimer.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RunStopSequence.h" />
-    <ClInclude Include="MfcThreadDlg.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="thread_pool.h" />
+    <ClInclude Include="thread_poolDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CAbsThread.cpp" />
-    <ClCompile Include="CAxisController.cpp" />
-    <ClCompile Include="CCylinder.cpp" />
-    <ClCompile Include="CMmceIo.cpp" />
-    <ClCompile Include="COPSwitch.cpp" />
-    <ClCompile Include="CTimer.cpp" />
-    <ClCompile Include="RunStopSequence.cpp" />
-    <ClCompile Include="MfcThreadDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="thread_pool.cpp" />
+    <ClCompile Include="thread_poolDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="RunStopSequence.rc" />
+    <ResourceCompile Include="thread_pool.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\RunStopSequence.rc2" />
+    <None Include="res\thread_pool.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\RunStopSequence.ico" />
+    <Image Include="res\thread_pool.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

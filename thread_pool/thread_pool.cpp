@@ -1,26 +1,26 @@
 
-// RunStopSequence.cpp : 응용 프로그램에 대한 클래스 동작을 정의합니다.
+// thread_pool.cpp : 응용 프로그램에 대한 클래스 동작을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "RunStopSequence.h"
-#include "MfcThreadDlg.h"
+#include "thread_pool.h"
+#include "thread_poolDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CRunStopSequenceApp
+// Cthread_poolApp
 
-BEGIN_MESSAGE_MAP(CRunStopSequenceApp, CWinApp)
+BEGIN_MESSAGE_MAP(Cthread_poolApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
-// CRunStopSequenceApp 생성
+// Cthread_poolApp 생성
 
-CRunStopSequenceApp::CRunStopSequenceApp()
+Cthread_poolApp::Cthread_poolApp()
 {
 	// 다시 시작 관리자 지원
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
@@ -30,14 +30,14 @@ CRunStopSequenceApp::CRunStopSequenceApp()
 }
 
 
-// 유일한 CRunStopSequenceApp 개체입니다.
+// 유일한 Cthread_poolApp 개체입니다.
 
-CRunStopSequenceApp theApp;
+Cthread_poolApp theApp;
 
 
-// CRunStopSequenceApp 초기화
+// Cthread_poolApp 초기화
 
-BOOL CRunStopSequenceApp::InitInstance()
+BOOL Cthread_poolApp::InitInstance()
 {
 	// 응용 프로그램 매니페스트가 ComCtl32.dll 버전 6 이상을 사용하여 비주얼 스타일을
 	// 사용하도록 지정하는 경우, Windows XP 상에서 반드시 InitCommonControlsEx()가 필요합니다.
@@ -70,7 +70,7 @@ BOOL CRunStopSequenceApp::InitInstance()
 	// 적절한 내용으로 수정해야 합니다.
 	SetRegistryKey(_T("로컬 응용 프로그램 마법사에서 생성된 응용 프로그램"));
 
-	MfcThreadDlg dlg;
+	Cthread_poolDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)

@@ -1,25 +1,20 @@
 
-// RunStopSequenceDlg.h : 헤더 파일
+// thread_poolDlg.h : 헤더 파일
 //
 
 #pragma once
 
-#include "CThreadColtrol.h"
 
-
-// CRunStopSequenceDlg 대화 상자
-class CRunStopSequenceDlg : public CDialogEx
+// Cthread_poolDlg 대화 상자
+class Cthread_poolDlg : public CDialogEx
 {
-	COPSwitch		m_StartSwitch;
-	CThreadColtrol	m_MainThread;
-	
 // 생성입니다.
 public:
-	CRunStopSequenceDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
+	Cthread_poolDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_RUNSTOPSEQUENCE_DIALOG };
+	enum { IDD = IDD_THREAD_POOL_DIALOG };
 #endif
 
 	protected:
@@ -37,6 +32,6 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedRun();
-	afx_msg void OnBnClickedStop();
+	afx_msg void OnBnClickedThread();
+	afx_msg void OnBnClickedPool();
 };

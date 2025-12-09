@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "RunStopSequence.h"
-#include "RunStopSequenceDlg.h"
+#include "MfcThreadDlg.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
@@ -44,29 +44,29 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CRunStopSequenceDlg 대화 상자
+// MfcThreadDlg 대화 상자
 
 
 
 
 
-void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
+void MfcThreadDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(MfcThreadDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_RUN, &CRunStopSequenceDlg::OnBnClickedRun)
-	ON_BN_CLICKED(IDC_STOP, &CRunStopSequenceDlg::OnBnClickedStop)
+	ON_BN_CLICKED(IDC_RUN, &MfcThreadDlg::OnBnClickedRun)
+	ON_BN_CLICKED(IDC_STOP, &MfcThreadDlg::OnBnClickedStop)
 END_MESSAGE_MAP()
 
 
-// CRunStopSequenceDlg 메시지 처리기
+// MfcThreadDlg 메시지 처리기
 
-BOOL CRunStopSequenceDlg::OnInitDialog()
+BOOL MfcThreadDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
@@ -100,7 +100,7 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
-void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void MfcThreadDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
@@ -117,7 +117,7 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  아래 코드가 필요합니다.  문서/뷰 모델을 사용하는 MFC 응용 프로그램의 경우에는
 //  프레임워크에서 이 작업을 자동으로 수행합니다.
 
-void CRunStopSequenceDlg::OnPaint()
+void MfcThreadDlg::OnPaint()
 {
 	if (IsIconic())
 	{
@@ -144,28 +144,27 @@ void CRunStopSequenceDlg::OnPaint()
 
 // 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
 //  이 함수를 호출합니다.
-HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
+HCURSOR MfcThreadDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
+MfcThreadDlg::MfcThreadDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_StartSwitch(/* 적절한 인자 전달 필요 */)
-	, m_MainThread(m_StartSwitch)
+	, m_MainThread(m_StartSwitch, m_robot)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
 	m_MainThread.resume();
 }
 
-void CRunStopSequenceDlg::OnBnClickedRun()
+void MfcThreadDlg::OnBnClickedRun()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_StartSwitch.setStatus(true);
 }
 
-void CRunStopSequenceDlg::OnBnClickedStop()
+void MfcThreadDlg::OnBnClickedStop()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_StartSwitch.setStatus(false);
