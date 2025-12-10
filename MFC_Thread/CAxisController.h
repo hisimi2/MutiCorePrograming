@@ -15,7 +15,8 @@ public:
 
     // 기존 move 등 필요한 메서드 정의
     void move(int position) {
-        // 축 이동 로직 구현
+        
+		notify("Axis moved to position: " + std::to_string(position));
     }
 };
 

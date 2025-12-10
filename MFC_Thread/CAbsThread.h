@@ -3,7 +3,7 @@
 class CAbsThread
 {
 protected:
-	CWinThread* m_pThread;
+	CWinThread*		m_pThread;
 	HANDLE			m_hThread;
 
 	int				m_nStatus;
@@ -12,15 +12,12 @@ protected:
 
 	static UINT ThreadProc(LPVOID lpParam);
 	int create();
-	virtual bool	sequence() { return 0; };
-	virtual int	sequenceStatus() { return 0; };
+	virtual bool	sequence() = 0;
+	virtual int	threadStatus() { return m_nStatus; };
 public:
 	enum _eSTATUS
 	{
-		eNOT_EXIST = 0,
-		eSUSPEND,
-		eRUN,
-		eTIMEOUT = 1000
+		eNOT_EXIST = 0,	eSUSPEND, eRUN,	eTIMEOUT = 1000
 	};
 
 	CAbsThread(DWORD dwTimeOut = eTIMEOUT);

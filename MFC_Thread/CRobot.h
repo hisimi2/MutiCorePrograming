@@ -9,7 +9,9 @@ class CRobot : public CAbsThread
 	CAxisController _axisX;
 	CAxisController _axisY;
 	CCylinder       _cylinderGripper;
-	CCylinder   _cylinderHand;
+	CCylinder		_cylinderHand;
+
+	bool	sequence() override;
 public:
 	CRobot(void);
 	~CRobot(void);
@@ -20,5 +22,6 @@ public:
     	void release(void);
     
     	void attach(IObserver* pObserver);
-    };
+
+};
 

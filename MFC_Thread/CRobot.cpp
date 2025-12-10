@@ -37,8 +37,21 @@ void CRobot::attach(IObserver* pObserver)
 	_axisX.attach(pObserver);
 	_axisY.attach(pObserver);
 	_cylinderGripper.attach(pObserver);
-    	_cylinderHand.attach(pObserver);
-    }
+}
+
+bool CRobot::sequence()
+{
+	moveX(100);
+	moveY(100);
+	grip();
+
+
+	moveX(200);
+	moveY(200);
+	release();
+
+	return true;
+}
 
 
 

@@ -1,8 +1,8 @@
-// RunStopSequenceDlg.cpp : 구현 파일
+// MfcThreadDlg.cpp : 구현 파일
 //
 
 #include "stdafx.h"
-#include "RunStopSequence.h"
+#include "MfcThread.h"
 #include "MfcThreadDlg.h"
 #include "afxdialogex.h"
 
@@ -48,7 +48,11 @@ END_MESSAGE_MAP()
 
 
 
-
+MfcThreadDlg::MfcThreadDlg(CWnd* pParent /*=NULL*/)
+	: CDialogEx(IDD_MFC_THREAD_DIALOG, pParent)
+{
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+}
 
 void MfcThreadDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -62,6 +66,8 @@ BEGIN_MESSAGE_MAP(MfcThreadDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_RUN, &MfcThreadDlg::OnBnClickedRun)
 	ON_BN_CLICKED(IDC_STOP, &MfcThreadDlg::OnBnClickedStop)
+	// 사용자 지정 메시지에 대한 메시지 맵 항목을 추가합니다.
+	ON_MESSAGE(WM_UPDATE_ACTION_LIST, &MfcThreadDlg::OnUpdateActionList)
 END_MESSAGE_MAP()
 
 
@@ -97,9 +103,8 @@ BOOL MfcThreadDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-
-	// 옵저버로 자신(this)을 등록
-	m_robot.attach(this);
+	m_robot.GetAxisController()->attach(this);
+	m_robot.GetCylinder()->attach(this);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -153,23 +158,33 @@ HCURSOR MfcThreadDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-MfcThreadDlg::MfcThreadDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_MainThread(m_StartSwitch, m_robot)
-{
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-	m_MainThread.resume();
-}
 
 void MfcThreadDlg::OnBnClickedRun()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_StartSwitch.setStatus(true);
+	
 }
+
 
 void MfcThreadDlg::OnBnClickedStop()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_StartSwitch.setStatus(false);
+}
+
+// 사용자 지정 메시지 핸들러 함수를 구현합니다.
+LRESULT MfcThreadDlg::OnUpdateActionList(WPARAM wParam, LPARAM lParam)
+{
+	// LPARAM으로 전달된 CString 포인터를 가져옵니다.
+	CString* pStr = (CString*)lParam;
+	if (pStr != nullptr)
+	{
+		// 리스트 박스에 문자열을 추가합니다.
+		m_ActionList.AddString(*pStr);
+		// 동적으로 할당된 메모리를 해제합니다.
+		delete pStr;
+	}
+	return 0;
 }
