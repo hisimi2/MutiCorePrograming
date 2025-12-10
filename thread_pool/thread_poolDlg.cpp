@@ -5,6 +5,12 @@
 #include "thread_pool.h"
 #include "thread_poolDlg.h"
 #include "afxdialogex.h"
+#include <thread>
+#include <chrono>
+#include <iostream>
+#include <vector>
+#include <future>
+#include "ThreadPool.h" // ThreadPool 클래스 정의 헤더 추가
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -206,16 +212,17 @@ void Cthread_poolDlg::OnBnClickedPool()
 	msg.Format(_T("%d개의 스레드로 풀 생성됨"), pool_size);
 	AfxMessageBox(msg);
 
-
+		
 	// 결과값이 없는 작업들을 큐에 추가
 	for (int i = 0; i < 8; ++i) {
-		pool.enqueue(simple_task, i);
+		ThreadPool* pool = new ThreadPool(pool_size);
+		pool->enqueue(simple_task, i);
 	}
 
 	// 결과값이 있는 작업들을 큐에 추가하고, future를 벡터에 저장
 	std::vector<std::future<int>> results;
 	for (int i = 0; i < 8; ++i) {
-		results.emplace_back(pool.enqueue(task_with_return, i));
+		results.push_back(pool.enqueue(task_with_return, i));
 	}
 
 	// future를 통해 작업 결과들을 받음

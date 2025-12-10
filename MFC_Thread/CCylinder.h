@@ -1,20 +1,27 @@
 #pragma once
 #include <string>
 #include <vector>
-using namespace std;
+#include "CSubject.h"
+
 
 #define MANUAL			(TRUE)
 #define INVALID			(-1)
 
 
-class CCylinder
+class CCylinder : public CSubject
 {
 	vector<UINT> m_ASensor, m_BSensor;
+	double		m_dTimer;
+	UINT		m_uDelay;
+	string		m_strName;
+	UINT		m_nOutA, m_nOutB;
 
 public:
 
-	CCylinder(UINT OutA = INVALID, UINT OutB = INVALID) :
-		m_nOutA(OutA), m_nOutB(OutB)
+	CCylinder(string strName, UINT OutA = INVALID, UINT OutB = INVALID) 
+		: m_strName(strName)
+		, m_nOutA(OutA)
+		, m_nOutB(OutB)
 	{
 	};
 	~CCylinder();
@@ -35,13 +42,6 @@ public:
 	int			unclamp(BOOL bManual = MANUAL) { return down(bManual); }
 
 	void		setName(string& strData);
-
 	void		setDelay(double dTimer = 3.0, UINT uDelay = 1);
-	string		m_strName;
-	UINT		m_nOutA, m_nOutB;
-	
-private:
-	double		m_dTimer;
-	UINT		m_uDelay;
 };
 

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Mailslot">
+      <UniqueIdentifier>{5b6e84d3-905e-4b17-a44d-f8f0b8c09107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NamedPipe">
+      <UniqueIdentifier>{8cadd2b1-4bed-4e25-a030-0ea57a29d3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SharedMemory">
+      <UniqueIdentifier>{e350b430-da07-4a6c-b89d-c2c391d942d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{1e673874-a98c-46db-9b6b-6f3c8262a5c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\헤더 파일">
+      <UniqueIdentifier>{bd37a421-c39c-43ea-b176-280900743457}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CMailSlotReceiver.h">
+      <Filter>Mailslot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CMailSlotSender.h">
+      <Filter>Mailslot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSocketServer.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSocketClient.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSharedMemoryServer.h">
+      <Filter>SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSharedMemoryClient.h">
+      <Filter>SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CNamedPipeServer.h">
+      <Filter>NamedPipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CNamedPipeClient.h">
+      <Filter>NamedPipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\IPC_CONSTANT.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CommonStruct\ST_IPC.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\include\STMessage.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\framework.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\pch.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\Resource.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\SocketClient.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\SocketClientDlg.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PracticeSource\SocketClient\targetver.h">
+      <Filter>헤더 파일\헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CNamedPipe.h">
+      <Filter>NamedPipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSharedMemory.h">
+      <Filter>SharedMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CMailSlot.h">
+      <Filter>Mailslot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\IPC\CSocket.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CMailSlotSender.cpp">
+      <Filter>Mailslot</Filter>
+    </ClCompile>
+    <ClCompile Include="CMailSlotReceiver.cpp">
+      <Filter>Mailslot</Filter>
+    </ClCompile>
+    <ClCompile Include="CNamedPipeServer.cpp">
+      <Filter>NamedPipe</Filter>
+    </ClCompile>
+    <ClCompile Include="CSharedMemoryClient.cpp">
+      <Filter>SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="CSharedMemoryServer.cpp">
+      <Filter>SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="CSocketClient.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="CSocketServer.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="CNamedPipeClient.cpp">
+      <Filter>NamedPipe</Filter>
+    </ClCompile>
+    <ClCompile Include="CNamedPipe.cpp">
+      <Filter>NamedPipe</Filter>
+    </ClCompile>
+    <ClCompile Include="CSharedMemory.cpp">
+      <Filter>SharedMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="CMailSlot.cpp">
+      <Filter>Mailslot</Filter>
+    </ClCompile>
+    <ClCompile Include="CSocket.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

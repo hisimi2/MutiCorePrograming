@@ -53,6 +53,7 @@ END_MESSAGE_MAP()
 void MfcThreadDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST_ACTION, m_ActionList);
 }
 
 BEGIN_MESSAGE_MAP(MfcThreadDlg, CDialogEx)
@@ -96,6 +97,9 @@ BOOL MfcThreadDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+
+	// 옵저버로 자신(this)을 등록
+	m_robot.attach(this);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }

@@ -1,37 +1,26 @@
-
-// RunStopSequenceDlg.h : Çì´õ ÆÄÀÏ
-//
-
-#pragma once
-
+ï»¿#pragma once
+#include "CRobot.h"
+#include "COPSwitch.h"
 #include "CRunStopControl.h"
+#include "afxwin.h"
+#include "IObserver.h" // IObserver ì¸í„°í˜ì´ìŠ¤ í—¤ë” ì¶”ê°€
 
 
-// MfcThreadDlg ´ëÈ­ »óÀÚ
-class MfcThreadDlg : public CDialogEx
+class MfcThreadDlg : public CDialogEx, public IObserver // IObserver ìƒì† ì¶”ê°€
 {
-	COPSwitch		m_StartSwitch;
-	CRobot			m_robot;
-	CRunStopControl	m_MainThread;
-	
-// »ı¼ºÀÔ´Ï´Ù.
 public:
-	MfcThreadDlg(CWnd* pParent = NULL);	// Ç¥ÁØ »ı¼ºÀÚÀÔ´Ï´Ù.
+	MfcThreadDlg(CWnd* pParent = NULL);
 
-// ´ëÈ­ »óÀÚ µ¥ÀÌÅÍÀÔ´Ï´Ù.
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_RUNSTOPSEQUENCE_DIALOG };
+	enum { IDD = IDD_MFC_THREAD_DIALOG };
 #endif
 
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Áö¿øÀÔ´Ï´Ù.
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV ì§€ì›ì…ë‹ˆë‹¤.
 
-
-// ±¸ÇöÀÔ´Ï´Ù.
 protected:
 	HICON m_hIcon;
 
-	// »ı¼ºµÈ ¸Ş½ÃÁö ¸Ê ÇÔ¼ö
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -40,4 +29,18 @@ protected:
 public:
 	afx_msg void OnBnClickedRun();
 	afx_msg void OnBnClickedStop();
+
+private:
+	COPSwitch m_StartSwitch;
+	CRobot m_robot;
+	CRunStopControl m_MainThread;
+
+public:
+	CListBox m_ActionList;
+
+	// IObserver ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„
+	virtual void update(std::string notification) override
+	{
+		// TODO: ì˜µì €ë²„ ì—…ë°ì´íŠ¸ ì‹œ í•„ìš”í•œ ë™ì‘ êµ¬í˜„
+	}
 };

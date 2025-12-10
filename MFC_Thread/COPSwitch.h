@@ -3,8 +3,9 @@
 #include "CTimer.h"
 #include <vector>
 #include <initializer_list>
+#include "CSubject.h"
 
-class COPSwitch : public CAbsThread
+class COPSwitch : public CAbsThread, public CSubject
 {
 public:
 	enum class EType { KEEP, PUSH, TOGGLE };

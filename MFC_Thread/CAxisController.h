@@ -1,10 +1,21 @@
 #pragma once
-class CAxisController
+#include "CSubject.h"
+
+// 기존 코드에 맞춰 CAxisController에 attach 메서드 추가
+class CAxisController : public CSubject
 {
 public:
-	CAxisController();
-	~CAxisController();
-	void MoveTo(double targetPosition);
-	double GetCurrentPosition();
+    CAxisController() {}
+    virtual ~CAxisController() {}
+
+    // attach 메서드 추가
+    void attach(IObserver* pObserver) {
+        CSubject::attach(pObserver);
+    }
+
+    // 기존 move 등 필요한 메서드 정의
+    void move(int position) {
+        // 축 이동 로직 구현
+    }
 };
 

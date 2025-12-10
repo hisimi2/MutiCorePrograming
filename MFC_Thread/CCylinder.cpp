@@ -160,6 +160,7 @@ int CCylinder::up(BOOL bManual)
 		if (isUp())
 		{
 			Sleep(m_uDelay);
+			notify("CYLINDER_UP_" + m_strName);
 			return TRUE;
 		}
 		else
@@ -182,6 +183,7 @@ int CCylinder::down(BOOL bManual)
 		if (isDown())
 		{
 			Sleep(m_uDelay);
+			notify("CYLINDER_DOWN_" + m_strName);
 			return TRUE;
 		}
 		else

@@ -26,6 +26,7 @@
       <Filter>Etc</Filter>
     </ClCompile>
     <ClCompile Include="MfcThreadDlg.cpp" />
+    <ClCompile Include="CRobot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CRunStopControl.h" />

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Observer Pattern">
+      <UniqueIdentifier>{9afd72f6-f084-4e15-8b52-91363346715b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\PATTERN\CDialogSubject.h">
+      <Filter>Observer Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PATTERN\CObserverLogger.h">
+      <Filter>Observer Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PATTERN\CSubject.h">
+      <Filter>Observer Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PATTERN\IObserver.h">
+      <Filter>Observer Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CDialogSubject.cpp">
+      <Filter>Observer Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="CSubject.cpp">
+      <Filter>Observer Pattern</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt">
+      <Filter>파일</Filter>
+    </None>
+  </ItemGroup>
+</Project>

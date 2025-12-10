@@ -1,0 +1,3 @@
+#pragma once
+
+enum _eIPC_ERRORS { eCREATE_ERROR, eCONNECT_ERROR, eREAD_ERROR, eWRITE_ERROR, eSUCESS };

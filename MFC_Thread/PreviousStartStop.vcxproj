@@ -115,9 +115,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)LIBRARY\include\PATTERN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)LIBRARY\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>MODULE_PATTERN.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -206,6 +209,7 @@
     <ClCompile Include="CCylinder.cpp" />
     <ClCompile Include="CMmceIo.cpp" />
     <ClCompile Include="COPSwitch.cpp" />
+    <ClCompile Include="CRobot.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="RunStopSequence.cpp" />
     <ClCompile Include="MfcThreadDlg.cpp" />
