@@ -4,7 +4,7 @@
 CRobot::CRobot(void)
 	: _axisX(), _axisY(), _cylinderGripper("Gripper"), _cylinderHand("Hand")
 {
-	// 생성자에서 필요한 초기화 코드 작성
+	suspend();
 }
 
 CRobot::~CRobot(void)
@@ -36,19 +36,25 @@ void CRobot::attach(IObserver* pObserver)
 {
 	_axisX.attach(pObserver);
 	_axisY.attach(pObserver);
-	_cylinderGripper.attach(pObserver);
+	_cylinderGripper.attach(pObserver); 
+	_cylinderHand.attach(pObserver);
 }
 
 bool CRobot::sequence()
 {
 	moveX(100);
 	moveY(100);
-	grip();
+	Sleep(1000);
 
+	grip();
+	Sleep(1000);
 
 	moveX(200);
 	moveY(200);
+	Sleep(1000);
+
 	release();
+	Sleep(1000);
 
 	return true;
 }

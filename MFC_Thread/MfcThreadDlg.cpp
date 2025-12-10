@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "MfcThread.h"
+#include "RunStopSequence.h"
 #include "MfcThreadDlg.h"
 #include "afxdialogex.h"
 
@@ -49,7 +49,8 @@ END_MESSAGE_MAP()
 
 
 MfcThreadDlg::MfcThreadDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(IDD_MFC_THREAD_DIALOG, pParent)
+	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
+	, m_MainThread(m_robot, m_StartSwitch)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -103,8 +104,8 @@ BOOL MfcThreadDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_robot.GetAxisController()->attach(this);
-	m_robot.GetCylinder()->attach(this);
+	m_robot.attach(this);
+	
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }

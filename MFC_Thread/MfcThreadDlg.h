@@ -35,8 +35,8 @@ public:
 	afx_msg void OnBnClickedStop();
 
 private:
-	COPSwitch m_StartSwitch;
-	CRobot m_robot;
+	COPSwitch	m_StartSwitch;
+	CRobot		m_robot;
 	CRunStopControl m_MainThread;
 
 public:

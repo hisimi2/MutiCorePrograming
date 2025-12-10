@@ -4,6 +4,7 @@
 COPSwitch::COPSwitch(EType type, bool isBlink)
 	: m_type(type), m_isBlink(isBlink), m_BlinkTimer(0.5)
 {
+	resume();
 }
 
 COPSwitch::~COPSwitch()

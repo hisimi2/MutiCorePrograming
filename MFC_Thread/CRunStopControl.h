@@ -8,8 +8,11 @@ class CRunStopControl : public CAbsThread
 	CRobot&		m_robot;
 
 public:
-	CRunStopControl(COPSwitch& startSwitch, CRobot& robot)
-		: m_startSwitch(startSwitch), m_robot(robot){}
+	CRunStopControl(CRobot& robot, COPSwitch& startSwitch)
+		: m_startSwitch(startSwitch), m_robot(robot)
+	{
+		resume();
+	}
 
 protected:
 	bool sequence()
