@@ -46,10 +46,9 @@ END_MESSAGE_MAP()
 
 // MfcThreadDlg 대화 상자
 
-
-
 MfcThreadDlg::MfcThreadDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
+	, m_StartSwitch(COPSwitch::EType::TOGGLE)
 	, m_MainThread(m_robot, m_StartSwitch)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -105,6 +104,7 @@ BOOL MfcThreadDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	m_robot.attach(this);
+	m_StartSwitch.attach(this);
 	
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -159,15 +159,12 @@ HCURSOR MfcThreadDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 void MfcThreadDlg::OnBnClickedRun()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	m_StartSwitch.setStatus(true);
 	
 }
-
 
 void MfcThreadDlg::OnBnClickedStop()
 {
@@ -182,8 +179,10 @@ LRESULT MfcThreadDlg::OnUpdateActionList(WPARAM wParam, LPARAM lParam)
 	CString* pStr = (CString*)lParam;
 	if (pStr != nullptr)
 	{
-		// 리스트 박스에 문자열을 추가합니다.
-		m_ActionList.AddString(*pStr);
+		// 리스트 박스에 문자열을 추가하고 인덱스를 받습니다.
+		int index = m_ActionList.AddString(*pStr);
+		// 새로 추가된 항목을 선택하여 보이도록 스크롤합니다.
+		m_ActionList.SetCurSel(index);
 		// 동적으로 할당된 메모리를 해제합니다.
 		delete pStr;
 	}

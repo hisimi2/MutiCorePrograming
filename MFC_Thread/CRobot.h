@@ -17,11 +17,14 @@ public:
 	~CRobot(void);
 
 	void moveX(int position);
-    	void moveY(int position);
-    	void grip(void);
-    	void release(void);
+    void moveY(int position);
+    void grip(void);
+    void release(void);
+	void up(void);
+	void down(void);
+
     
-    	void attach(IObserver* pObserver);
+    void attach(IObserver* pObserver);
 
 };
 

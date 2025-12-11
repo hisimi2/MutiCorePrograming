@@ -12,7 +12,7 @@ class CCylinder : public CSubject
 {
 	vector<UINT> m_ASensor, m_BSensor;
 	double		m_dTimer;
-	UINT		m_uDelay;
+	UINT		m_uDelay=1000;
 	string		m_strName;
 	UINT		m_nOutA, m_nOutB;
 
@@ -38,8 +38,8 @@ public:
 	BOOL		isUnclamp() { return isDown(); }
 	void		clampAsync() { upAsync(); }
 	void		unclampAsync() { downAsync(); }
-	int			clamp(BOOL bManual = MANUAL) { return up(bManual); }
-	int			unclamp(BOOL bManual = MANUAL) { return down(bManual); }
+	int			clamp(BOOL bManual = MANUAL);
+	int			unclamp(BOOL bManual = MANUAL);
 
 	void		setName(string& strData);
 	void		setDelay(double dTimer = 3.0, UINT uDelay = 1);

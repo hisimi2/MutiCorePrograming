@@ -196,6 +196,52 @@ int CCylinder::down(BOOL bManual)
 	}
 }
 
+int CCylinder::clamp(BOOL bManual)
+{
+	CTimer checkTimeOut(m_dTimer);
+	upAsync();
+	checkTimeOut.startTimer();
+	while (1)
+	{
+		if (isUp())
+		{
+			Sleep(m_uDelay);
+			notify("CYLINDER_CLAMP_" + m_strName);
+			return TRUE;
+		}
+		else
+		{
+			if (checkTimeOut.isOver())
+			{
+				return FALSE;
+			}
+		}
+	}
+}
+
+int CCylinder::unclamp(BOOL bManual)
+{
+	CTimer checkTimeOut(m_dTimer);
+	downAsync();
+	checkTimeOut.startTimer();
+	while (1)
+	{
+		if (isDown())
+		{
+			Sleep(m_uDelay);
+			notify("CYLINDER_UNCLAMP_" + m_strName);
+			return TRUE;
+		}
+		else
+		{
+			if (checkTimeOut.isOver())
+			{
+				return FALSE;
+			}
+		}
+	}
+}
+
 void CCylinder::setDelay(double dTimer, UINT uDelay)
 {
 	m_dTimer = dTimer;

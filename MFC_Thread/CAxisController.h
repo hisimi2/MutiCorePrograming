@@ -17,6 +17,7 @@ public:
     void move(int position) {
         
 		notify("Axis moved to position: " + std::to_string(position));
+        Sleep(1000);
     }
 };
 

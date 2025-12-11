@@ -24,12 +24,22 @@ void CRobot::moveY( int position )
 
 void CRobot::grip( void )
 {
-	_cylinderGripper.clampAsync();
+	_cylinderGripper.clamp();
 }
 
 void CRobot::release( void )
 {
-	_cylinderGripper.unclampAsync();
+	_cylinderGripper.unclamp();
+}
+
+void CRobot::up(void)
+{
+	_cylinderHand.up();
+}
+
+void CRobot::down(void)
+{
+	_cylinderHand.down();
 }
 
 void CRobot::attach(IObserver* pObserver)
@@ -42,19 +52,22 @@ void CRobot::attach(IObserver* pObserver)
 
 bool CRobot::sequence()
 {
+	// picking
+	up();
 	moveX(100);
 	moveY(100);
-	Sleep(1000);
-
+	release();
+	down();
 	grip();
-	Sleep(1000);
-
+	up();
+	
+	// placing
+	up();
 	moveX(200);
 	moveY(200);
-	Sleep(1000);
-
+	down();
 	release();
-	Sleep(1000);
+	up();
 
 	return true;
 }

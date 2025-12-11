@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "COPSwitch.h"
+#include <string> // std::string을 사용하기 위해 추가
 
 COPSwitch::COPSwitch(EType type, bool isBlink)
 	: m_type(type), m_isBlink(isBlink), m_BlinkTimer(0.5)
@@ -30,7 +31,13 @@ void COPSwitch::setGroup(COPSwitch* pObject)
 
 void COPSwitch::setStatus(bool bStatus)
 {
-	m_status = bStatus;
+	if (m_status != bStatus)
+	{
+		m_status = bStatus;
+		// 상태 변경을 알립니다.
+		std::string notification = "Switch is now " + std::string(bStatus ? "ON" : "OFF");
+		notify(notification);
+	}
 }
 
 void COPSwitch::setBlink(bool bStatus)

@@ -7,9 +7,6 @@
     <ClCompile Include="COPSwitch.cpp">
       <Filter>Actuator</Filter>
     </ClCompile>
-    <ClCompile Include="CAbsThread.cpp">
-      <Filter>Thread</Filter>
-    </ClCompile>
     <ClCompile Include="CCylinder.cpp">
       <Filter>Actuator</Filter>
     </ClCompile>
@@ -27,6 +24,9 @@
     </ClCompile>
     <ClCompile Include="MfcThreadDlg.cpp" />
     <ClCompile Include="CRobot.cpp" />
+    <ClCompile Include="CAbsThread.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CRunStopControl.h" />
