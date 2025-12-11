@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CRobot.cpp" />
+    <ClCompile Include="RunStopSequenceDlg.cpp" />
+    <ClCompile Include="CAxisController.cpp">
+      <Filter>Actuator</Filter>
+    </ClCompile>
+    <ClCompile Include="CCylinder.cpp">
+      <Filter>Actuator</Filter>
+    </ClCompile>
+    <ClCompile Include="CMmceIo.cpp">
+      <Filter>Actuator</Filter>
+    </ClCompile>
+    <ClCompile Include="COPSwitch.cpp">
+      <Filter>Actuator</Filter>
+    </ClCompile>
+    <ClCompile Include="CRobotPickStep.cpp">
+      <Filter>Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="CRobotReadyStep.cpp">
+      <Filter>Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework\CUnit.cpp">
+      <Filter>Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="RunStopSequence.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CRobot.h" />
+    <ClInclude Include="RunStopSequenceDlg.h" />
+    <ClInclude Include="CAxisController.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="CCylinder.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="CMmceIo.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="COPSwitch.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="CRobotPickStep.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="CRobotReadyStep.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="IDio.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\IPeriodicTask.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\CUnit.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\IOPSwitch.h">
+      <Filter>Actuator</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework\IStep.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="RunStopSequence.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler.h">
+      <Filter>Pattern</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Actuator">
+      <UniqueIdentifier>{074b0da3-819f-456d-abfc-634627d20536}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dio">
+      <UniqueIdentifier>{2c0a864d-a85d-4efb-967a-088ca22eff46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Etc">
+      <UniqueIdentifier>{b290e6d3-6f71-4382-a3bd-d246e57f5c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pattern">
+      <UniqueIdentifier>{8532ef80-67f0-4ec0-85ee-65748874e207}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>Etc</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\RunStopSequence.ico">
+      <Filter>Etc</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RunStopSequence.rc">
+      <Filter>Etc</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\RunStopSequence.rc2">
+      <Filter>Etc</Filter>
+    </None>
+  </ItemGroup>
+</Project>

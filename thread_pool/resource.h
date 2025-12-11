@@ -9,6 +9,7 @@
 #define IDR_MAINFRAME                   128
 #define IDC_THREAD                      1000
 #define IDC_POOL                        1001
+#define IDC_LIST_ACTION                 1002
 
 // Next default values for new objects
 // 

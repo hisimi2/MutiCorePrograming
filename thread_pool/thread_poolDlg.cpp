@@ -211,8 +211,7 @@ void Cthread_poolDlg::OnBnClickedPool()
 	CString msg;
 	msg.Format(_T("%d개의 스레드로 풀 생성됨"), pool_size);
 	AfxMessageBox(msg);
-
-		
+	
 	// 결과값이 없는 작업들을 큐에 추가
 	for (int i = 0; i < 8; ++i) {
 		ThreadPool* pool = new ThreadPool(pool_size);
