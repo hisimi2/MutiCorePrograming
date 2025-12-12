@@ -4,7 +4,10 @@ class CGripperCylinder :
     public CCylinderBase
 {
 public:
-    using CCylinderBase::CCylinderBase; // 생성자 상속
+    CGripperCylinder(std::string name, int nOnBit, int nOffBit)
+        : CCylinderBase(name, nOnBit, nOffBit)
+    {
+    }
 
     int clamp(bool bManual = MANUAL) {
         return actA(bManual);

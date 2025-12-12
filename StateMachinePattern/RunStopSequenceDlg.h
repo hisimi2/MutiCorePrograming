@@ -2,21 +2,26 @@
 //
 
 #pragma once
-#include "ctpl_stl.h" // CTPL 헤더
-#include "Scheduler.h"
-#include "CMmceIo.h"
-#include "COPSwitch.h"
-#include "CRobot.h" // CRobot 헤더 추가
-#include <memory>
+#include "afxwin.h"
 #include <vector>
+#include <memory>
+#include "ctpl_stl.h"
+#include "CMmceIo.h"
+#include "Scheduler.h"
+#include "COPSwitch.h"
+#include "CRobot.h"
+#include "IObserver.h" // IObserver 인터페이스 포함
 
 // CRunStopSequenceDlg 대화 상자
-class CRunStopSequenceDlg : public CDialogEx
+class CRunStopSequenceDlg : public CDialogEx, public IObserver
 {
 // 생성입니다.
 public:
 	CRunStopSequenceDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
-	~CRunStopSequenceDlg(); // 소멸자 추가
+	virtual ~CRunStopSequenceDlg();
+
+	// IObserver 인터페이스의 update 메서드 구현
+	void update(string notification) override;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -41,17 +46,18 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	// --- 스레드 풀 아키텍처 멤버 ---
-	std::unique_ptr<ctpl::thread_pool> m_pThreadPool;
-	std::unique_ptr<Scheduler> m_pScheduler;
-
-	// --- 작업 객체들 ---
+	// --- 비즈니스 로직 객체들 ---
 	CMmceIo m_mmceIo;
 	COPSwitch m_StartSwitch;
 	CRobot m_Robot;
-	std::vector<std::unique_ptr<COPSwitch>> m_switches; // 복사 불가능하므로 unique_ptr 사용
-public:
+	std::vector<std::unique_ptr<COPSwitch>> m_switches;
 
-	
+	// --- 스케줄링 관련 멤버 ---
+	std::unique_ptr<ctpl::thread_pool> m_pThreadPool;
+	std::unique_ptr<Scheduler> m_pScheduler;
+
 	CListBox m_ActionList;
+
+	// UI 업데이트를 위한 사용자 메시지 핸들러
+	afx_msg LRESULT OnUpdateActionList(WPARAM wParam, LPARAM lParam);
 };

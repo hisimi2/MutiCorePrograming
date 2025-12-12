@@ -5,11 +5,10 @@
 #include "CRobotReadyStep.h"
 #include "CRobotPickStep.h" // CRobotPickStep 사용을 위해 추가
 
-
 CRobot::CRobot(IOPSwitch& startSwitch)
-	: CUnit(startSwitch)
-	, m_Z(0, 0)        // 적절한 인자(예: 포트 번호 등)로 CVerticalCylinder 생성
-	, m_Grip(0, 0)     // 적절한 인자(예: 포트 번호 등)로 CGripperCylinder 생성
+	: CUnit("Robot") // nullptr 대신 빈 문자열을 전달합니다.
+	, m_Z("Hand",0, 0)        // 적절한 인자(예: 포트 번호 등)로 CVerticalCylinder 생성
+	, m_Grip("Grip",0, 0)     // 적절한 인자(예: 포트 번호 등)로 CGripperCylinder 생성
 {
 	// std::make_unique를 사용하여 Step 인스턴스를 생성합니다.
 	m_pReadyStep = std::make_unique<CRobotReadyStep>();

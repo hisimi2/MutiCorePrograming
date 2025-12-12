@@ -1,35 +1,29 @@
 #pragma once
-#include "Framework/CUnit.h"
-#include "Framework/IOPSwitch.h"
-#include "CVerticalCylinder.h"   // 새로운 헤더 추가
-#include "CGripperCylinder.h"    // 새로운 헤더 추가
-#include "CRobotReadyStep.h"
-#include "CRobotPickStep.h"
 #include <memory>
+#include "Framework/CUnit.h"
+#include "CVerticalCylinder.h"
+#include "CGripperCylinder.h"
+#include "CSubject.h" // CSubject 클래스 포함
 
-class CRobot : public CUnit
+class CRobot : public CUnit, public CSubject
 {
 public:
-	CRobot(IOPSwitch& startSwitch);
-	~CRobot();
+    CRobot(IOPSwitch& startSwitch);
+    virtual ~CRobot();
 
-	// 반환 타입도 새로운 클래스로 변경
-	CVerticalCylinder& getZ() { return m_Z; }
-	CGripperCylinder& getGrip() { return m_Grip; }
+    // 로봇의 구성 요소에 접근하기 위한 getter 메서드들
+    CVerticalCylinder& getZ() { return m_Z; }
+    CGripperCylinder& getGrip() { return m_Grip; }
+
+    // 스텝 객체들
+    std::unique_ptr<IStep> m_pPickStep;
+    std::unique_ptr<IStep> m_pReadyStep;
 
 private:
-	friend class CRobotReadyStep;
-	friend class CRobotPickStep;
-	// ... 다른 Step 클래스들을 friend로 선언
+    // 로봇의 구성 요소들
+    CVerticalCylinder   m_Z;
+    CGripperCylinder    m_Grip;
 
-	// 멤버 변수 타입을 새로운 클래스로 변경
-	
-	CVerticalCylinder m_Z;
-	CGripperCylinder m_Grip;
-
-	// Step 인스턴스 타입을 std::unique_ptr로 변경
-	std::unique_ptr<CRobotReadyStep> m_pReadyStep;
-	std::unique_ptr<CRobotPickStep> m_pPickStep;
-	// ... 다른 Step 포인터들도 동일하게 변경 ...
+    
 };
 

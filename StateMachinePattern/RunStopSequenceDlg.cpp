@@ -10,9 +10,10 @@
 #define new DEBUG_NEW
 #endif
 
+// 사용자 정의 메시지
+#define WM_UPDATE_ACTION_LIST (WM_USER + 1)
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -42,7 +43,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
-
 
 // CRunStopSequenceDlg 대화 상자
 
@@ -79,9 +79,7 @@ BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RUN, &CRunStopSequenceDlg::OnBnClickedRun)
 	ON_BN_CLICKED(IDC_STOP, &CRunStopSequenceDlg::OnBnClickedStop)
 	ON_WM_DESTROY()
-
-	
-
+	ON_MESSAGE(WM_UPDATE_ACTION_LIST, &CRunStopSequenceDlg::OnUpdateActionList)
 END_MESSAGE_MAP()
 
 
@@ -115,6 +113,9 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
+	// --- Observer 등록 ---
+	m_Robot.attach(this);
+
 	// --- 스레드 풀 및 스케줄러 초기화 ---
 
 	// 1. CTPL 스레드 풀 생성 (예: 하드웨어 코어 수만큼)
@@ -132,15 +133,15 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	}
 
 	// 스케줄러에 모든 작업 등록
-	m_pScheduler->addTask(&m_mmceIo);
-	m_pScheduler->addTask(&m_StartSwitch);
-	m_pScheduler->addTask(&m_Robot);
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_mmceIo, [](IPeriodicTask*){}));
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_StartSwitch, [](IPeriodicTask*){}));
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_Robot, [](IPeriodicTask*){})); // 수정 코드: &m_Robot를 IPeriodicTask*로 암시적 업캐스팅 (CRobot이 IPeriodicTask를 public으로 상속받으므로)
 	for (const auto& sw : m_switches)
 	{
-		m_pScheduler->addTask(sw.get());
+		m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(sw.get(), [](IPeriodicTask*){}));
 	}
 
-	// 4. 스케줄러 시작
+	// 3. 스케줄러 시작
 	m_pScheduler->start();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -157,6 +158,32 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
+}
+
+// IObserver의 update 메서드 구현
+void CRunStopSequenceDlg::update(string notification)
+{
+	// 다른 스레드에서 호출되므로, UI 스레드로 메시지를 보내 안전하게 처리
+	// new를 사용하여 문자열을 힙에 복사하고 포인터를 전달
+	char* msg = new char[notification.length() + 1];
+	strcpy_s(msg, notification.length() + 1, notification.c_str());
+	PostMessage(WM_UPDATE_ACTION_LIST, (WPARAM)msg);
+}
+
+// 사용자 메시지 핸들러 구현
+afx_msg LRESULT CRunStopSequenceDlg::OnUpdateActionList(WPARAM wParam, LPARAM lParam)
+{
+	// 전달받은 문자열 포인터를 CString으로 변환
+	char* msg = (char*)wParam;
+	CString str(msg);
+	
+	// 리스트박스에 추가
+	m_ActionList.AddString(str);
+
+	// 동적으로 할당된 메모리 해제
+	delete[] msg;
+
+	return 0;
 }
 
 void CRunStopSequenceDlg::OnPaint()

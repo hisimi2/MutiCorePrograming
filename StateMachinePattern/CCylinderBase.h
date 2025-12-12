@@ -24,6 +24,7 @@ public:
 		, m_nOutB(OutB)
 	{
 	};
+
 	virtual ~CCylinderBase() {};
 	void		setSensorPortA(UINT uCount, va_list& list);
 	void		setSensorPortB(UINT uCount, va_list& list);
@@ -33,7 +34,6 @@ public:
 	void		actBAsync();
 	int			actA(BOOL bManual = MANUAL);
 	int			actB(BOOL bManual = MANUAL);
-
 
 	void		setName(string& strData);
 	void		setDelay(double dTimer = 3.0, UINT uDelay = 1);

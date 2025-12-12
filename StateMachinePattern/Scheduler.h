@@ -6,6 +6,7 @@
 #include <chrono>
 #include <atomic>
 #include <thread>
+#include <memory>
 
 class Scheduler
 {
@@ -14,7 +15,7 @@ public:
     Scheduler(ctpl::thread_pool& pool, std::chrono::milliseconds interval);
     ~Scheduler();
 
-    void addTask(IPeriodicTask* task);
+    void addTask(std::shared_ptr<IPeriodicTask> task);
     void start();
     void stop();
 
@@ -22,7 +23,7 @@ private:
     void run();
 
     ctpl::thread_pool& m_pool;
-    std::vector<IPeriodicTask*> m_tasks;
+    std::vector<std::shared_ptr<IPeriodicTask>> m_tasks;
     std::thread m_schedulerThread;
     std::atomic<bool> m_stop{ false };
     std::chrono::milliseconds m_interval;
@@ -38,7 +39,7 @@ inline Scheduler::~Scheduler()
     stop();
 }
 
-inline void Scheduler::addTask(IPeriodicTask* task)
+inline void Scheduler::addTask(std::shared_ptr<IPeriodicTask> task)
 {
     m_tasks.push_back(task);
 }

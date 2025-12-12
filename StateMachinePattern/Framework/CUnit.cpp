@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "CUnit.h"
 
-CUnit::CUnit(IOPSwitch& startSwitch)
-	: m_pStartSwitch(&startSwitch), m_pCurrentStep(nullptr)
+CUnit::CUnit(std::string name)
+	: m_strName(name), m_pStartSwitch(NULL), m_pCurrentStep(NULL) // <- 수정: NULL 체크 후 빈 문자열로 초기화
 {
 }
 
