@@ -1,7 +1,8 @@
 #pragma once
 #include "Framework/CUnit.h"
 #include "Framework/IOPSwitch.h"
-#include "CCylinder.h"
+#include "CVerticalCylinder.h"   // 새로운 헤더 추가
+#include "CGripperCylinder.h"    // 새로운 헤더 추가
 #include "CRobotReadyStep.h"
 #include "CRobotPickStep.h"
 #include <memory>
@@ -12,17 +13,19 @@ public:
 	CRobot(IOPSwitch& startSwitch);
 	~CRobot();
 
-	// CRobot의 컴포넌트에 접근하기 위한 public 메서드
-	CCylinder& getZ() { return m_Z; }
-	CCylinder& getGrip() { return m_Grip; }
+	// 반환 타입도 새로운 클래스로 변경
+	CVerticalCylinder& getZ() { return m_Z; }
+	CGripperCylinder& getGrip() { return m_Grip; }
 
 private:
 	friend class CRobotReadyStep;
 	friend class CRobotPickStep;
 	// ... 다른 Step 클래스들을 friend로 선언
 
-	CCylinder m_Z;
-	CCylinder m_Grip;
+	// 멤버 변수 타입을 새로운 클래스로 변경
+	
+	CVerticalCylinder m_Z;
+	CGripperCylinder m_Grip;
 
 	// Step 인스턴스 타입을 std::unique_ptr로 변경
 	std::unique_ptr<CRobotReadyStep> m_pReadyStep;

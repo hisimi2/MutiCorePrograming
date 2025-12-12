@@ -189,7 +189,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAxisController.h" />
-    <ClInclude Include="CCylinder.h" />
     <ClInclude Include="CCylinderBase.h" />
     <ClInclude Include="CGripperCylinder.h" />
     <ClInclude Include="CMmceIo.h" />
@@ -214,7 +213,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CAxisController.cpp" />
-    <ClCompile Include="CCylinder.cpp" />
     <ClCompile Include="CCylinderBase.cpp" />
     <ClCompile Include="CGripperCylinder.cpp" />
     <ClCompile Include="CMmceIo.cpp" />

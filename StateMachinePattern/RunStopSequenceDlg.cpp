@@ -69,6 +69,7 @@ CRunStopSequenceDlg::~CRunStopSequenceDlg()
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LIST_ACTION, m_ActionList);
 }
 
 BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)

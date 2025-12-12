@@ -30,9 +30,6 @@
     <ClCompile Include="CMmceIo.cpp">
       <Filter>Actuator\Dio</Filter>
     </ClCompile>
-    <ClCompile Include="CCylinder.cpp">
-      <Filter>Actuator\Cylinder</Filter>
-    </ClCompile>
     <ClCompile Include="CCylinderBase.cpp">
       <Filter>Actuator\Cylinder</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
     </ClInclude>
     <ClInclude Include="IAxisController.h">
       <Filter>Actuator</Filter>
-    </ClInclude>
-    <ClInclude Include="CCylinder.h">
-      <Filter>Actuator\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="CCylinderBase.h">
       <Filter>Actuator\Cylinder</Filter>

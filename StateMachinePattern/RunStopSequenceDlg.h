@@ -53,4 +53,5 @@ private:
 public:
 
 	
+	CListBox m_ActionList;
 };
