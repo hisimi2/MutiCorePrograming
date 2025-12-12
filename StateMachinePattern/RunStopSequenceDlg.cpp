@@ -78,9 +78,9 @@ BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RUN, &CRunStopSequenceDlg::OnBnClickedRun)
 	ON_BN_CLICKED(IDC_STOP, &CRunStopSequenceDlg::OnBnClickedStop)
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_LOAD_RECIPE, &CRunStopSequenceDlg::OnBnClickedLoadRecipe)
-	ON_BN_CLICKED(IDC_STOP2, &CRunStopSequenceDlg::OnBnClickedStop2)
-	ON_BN_CLICKED(IDC_LOAD_RECIPE, &CRunStopSequenceDlg::OnBnClickedLoadRecipe)
+
+	
+
 END_MESSAGE_MAP()
 
 
@@ -206,58 +206,4 @@ void CRunStopSequenceDlg::OnBnClickedStop()
 {
 	// 스위치 상태만 변경.
 	m_StartSwitch.setSwitchStatus(false);
-}
-
-// 레시피를 로드하는 시간이 오래 걸리는 함수 (시뮬레이션)
-std::string LoadRecipeFromFile(const std::string& filepath)
-{
-    std::this_thread::sleep_for(std::chrono::seconds(3)); // 3초 동안 멈춤
-    return "Recipe Data Loaded";
-}
-
-/*
-void CRunStopSequenceDlg::OnTimer(UINT_PTR nIDEvent)
-{
-    if (nIDEvent == ID_TIMER_CHECK_RECIPE)
-    {
-        // 작업이 끝났는지 확인
-        if (m_recipeFuture.valid() && m_recipeFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
-        {
-            try
-            {
-                std::string recipeData = m_recipeFuture.get();
-                AfxMessageBox(CString(recipeData.c_str()));
-            }
-            catch (const std::exception& e)
-            {
-                AfxMessageBox(CString(e.what()));
-            }
-            KillTimer(ID_TIMER_CHECK_RECIPE); // 타이머 중지
-        }
-    }
-    CDialogEx::OnTimer(nIDEvent);
-}
-*/
-
-void CRunStopSequenceDlg::OnBnClickedStop2()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
-
-void CRunStopSequenceDlg::OnBnClickedLoadRecipe()
-{
-	// 이미 다른 로딩 작업이 실행 중인지 확인
-//	if (m_recipeFuture.valid() && m_recipeFuture.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
-//	{
-//		AfxMessageBox(_T("이미 레시피를 로딩 중입니다."));
-		return;
-//	}
-
-	// std::async로 비동기 실행! UI 스레드는 여기서 멈추지 않음.
-//	m_recipeFuture = std::async(std::launch::async, LoadRecipeFromFile, "C:\\recipes\\my_recipe.xml");
-
-	AfxMessageBox(_T("레시피 로딩을 시작합니다. 완료되면 알려드립니다."));
-
-	// 결과를 확인하기 위해 타이머를 설정하여 주기적으로 future 상태를 체크할 수 있습니다.
-	// SetTimer(ID_TIMER_CHECK_RECIPE, 100, NULL);
 }

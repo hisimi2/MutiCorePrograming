@@ -115,10 +115,11 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Framework;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)\Framework;$(SolutionDir)LIBRARY\include\PATTERN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)LIBRARY\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -189,16 +190,20 @@
   <ItemGroup>
     <ClInclude Include="CAxisController.h" />
     <ClInclude Include="CCylinder.h" />
+    <ClInclude Include="CCylinderBase.h" />
+    <ClInclude Include="CGripperCylinder.h" />
     <ClInclude Include="CMmceIo.h" />
     <ClInclude Include="CRobotPickStep.h" />
     <ClInclude Include="CRobotReadyStep.h" />
     <ClInclude Include="COPSwitch.h" />
     <ClInclude Include="CRobot.h" />
     <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CVerticalCylinder.h" />
     <ClInclude Include="Framework\IPeriodicTask.h" />
     <ClInclude Include="Framework\CUnit.h" />
     <ClInclude Include="Framework\IOPSwitch.h" />
     <ClInclude Include="Framework\IStep.h" />
+    <ClInclude Include="IAxisController.h" />
     <ClInclude Include="IDio.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RunStopSequence.h" />
@@ -210,12 +215,15 @@
   <ItemGroup>
     <ClCompile Include="CAxisController.cpp" />
     <ClCompile Include="CCylinder.cpp" />
+    <ClCompile Include="CCylinderBase.cpp" />
+    <ClCompile Include="CGripperCylinder.cpp" />
     <ClCompile Include="CMmceIo.cpp" />
     <ClCompile Include="CRobotPickStep.cpp" />
     <ClCompile Include="CRobotReadyStep.cpp" />
     <ClCompile Include="COPSwitch.cpp" />
     <ClCompile Include="CRobot.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="CVerticalCylinder.cpp" />
     <ClCompile Include="Framework\CUnit.cpp" />
     <ClCompile Include="RunStopSequence.cpp" />
     <ClCompile Include="RunStopSequenceDlg.cpp" />

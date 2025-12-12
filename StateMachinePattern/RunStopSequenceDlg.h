@@ -51,6 +51,6 @@ private:
 	CRobot m_Robot;
 	std::vector<std::unique_ptr<COPSwitch>> m_switches; // 복사 불가능하므로 unique_ptr 사용
 public:
-	afx_msg void OnBnClickedStop2();
-	afx_msg void OnBnClickedLoadRecipe();
+
+	
 };
