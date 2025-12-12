@@ -2,8 +2,9 @@
 #include <string>
 #include "IStep.h"
 #include "IOPSwitch.h"
+#include "IPeriodicTask.h"
 
-class CUnit
+class CUnit : public IPeriodicTask
 {
 public:
     // 생성자 선언 추가

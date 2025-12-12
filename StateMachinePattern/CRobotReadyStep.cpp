@@ -23,17 +23,3 @@ IStep* CRobotReadyStep::execute(CUnit* pUnit)
     // 아직 동작이 완료되지 않았으면 현재 단계를 유지한다.
     return this;
 }
-
-// CRobotPickStep 클래스가 선언되어 있지 않으므로, 클래스 선언을 추가해야 합니다.
-// 예시: CRobotPickStep 클래스 선언 및 onEnter 함수 정의
-class CRobotPickStep
-{
-public:
-    void onEnter(CRobot& robot);
-};
-
-void CRobotPickStep::onEnter(CRobot& robot)
-{
-    robot.notify("Pick Step Entered"); // 상태 진입 시 알림
-}
-

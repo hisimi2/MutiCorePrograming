@@ -5,8 +5,9 @@
 class CRobotPickStep : public IStep
 {
 public:
-    IStep* execute(CUnit* pUnit) override;
+    IStep*  execute(CUnit* pUnit) override;
 };
+
 
 
 
