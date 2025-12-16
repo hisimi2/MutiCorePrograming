@@ -27,7 +27,6 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
-// 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP();
 };
@@ -52,6 +51,8 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	, m_Robot(m_StartSwitch)  // m_Robot은 m_StartSwitch를 참조하여 생성
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	m_StartSwitch.setOption(COPSwitch::EType::TOGGLE);
 }
 
 CRunStopSequenceDlg::~CRunStopSequenceDlg()
@@ -90,7 +91,6 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
-
 	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
@@ -117,7 +117,6 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	m_Robot.attach(this);
 
 	// --- 스레드 풀 및 스케줄러 초기화 ---
-
 	// 1. CTPL 스레드 풀 생성 (예: 하드웨어 코어 수만큼)
 	unsigned int core_count = std::thread::hardware_concurrency();
 	m_pThreadPool = std::make_unique<ctpl::thread_pool>(core_count > 0 ? core_count : 4);
@@ -125,21 +124,10 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	// 2. 스케줄러 생성 (예: 10ms 주기)
 	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
 
-	// 3. 작업(Task) 객체들 생성 및 스케줄러에 등록
-	// 예: 스위치 100개 생성 (복사 불가능하므로 unique_ptr로 동적 할당)
-	for (int i = 0; i < 100; ++i)
-	{
-		m_switches.push_back(std::make_unique<COPSwitch>(m_mmceIo));
-	}
-
 	// 스케줄러에 모든 작업 등록
 	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_mmceIo, [](IPeriodicTask*){}));
 	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_StartSwitch, [](IPeriodicTask*){}));
 	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_Robot, [](IPeriodicTask*){})); // 수정 코드: &m_Robot를 IPeriodicTask*로 암시적 업캐스팅 (CRobot이 IPeriodicTask를 public으로 상속받으므로)
-	for (const auto& sw : m_switches)
-	{
-		m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(sw.get(), [](IPeriodicTask*){}));
-	}
 
 	// 3. 스케줄러 시작
 	m_pScheduler->start();
@@ -219,9 +207,6 @@ HCURSOR CRunStopSequenceDlg::OnQueryDragIcon()
 void CRunStopSequenceDlg::OnDestroy()
 {
 	CDialogEx::OnDestroy();
-
-	// 소멸자에서 스레드 풀과 스케줄러를 정리하므로 OnDestroy에서 별도 처리 필요 없음
-	// setEnd() 호출들은 모두 제거
 }
 
 void CRunStopSequenceDlg::OnBnClickedRun()

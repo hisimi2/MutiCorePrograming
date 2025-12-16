@@ -1,11 +1,23 @@
 #pragma once
-#include "IStep.h"
+#include "Framework/IStep.h"
 
-// CRobotReadyStep 선언
 class CRobotReadyStep : public IStep
 {
 public:
-    IStep*  execute(CUnit* pUnit) override;
+    CRobotReadyStep();
+    virtual ~CRobotReadyStep();
+
+    // CUnit이 호출하는 execute 메서드를 오버라이딩합니다.
+    virtual IStep* execute(CUnit* pUnit) override;
+
+private:
+    enum class EStep
+    {
+        START,
+        WAIT_COMPLETE,
+    };
+
+    EStep m_eStep;
 };
 
 

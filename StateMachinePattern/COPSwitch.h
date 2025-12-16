@@ -38,7 +38,7 @@ public:
 
 	COPSwitch& setGroup(COPSwitch* pObject);
 	COPSwitch& setBlink(bool bStatus);
-	COPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs);
+	COPSwitch& setOption(EType type, bool isBlink = false, unsigned int pollIntervalMs = 0);
 
 private:
 	void setLED(bool bStatus);

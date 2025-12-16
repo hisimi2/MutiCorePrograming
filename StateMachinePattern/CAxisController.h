@@ -1,5 +1,7 @@
 #pragma once
-class CAxisController
+#include "IAxisController.h"
+
+class CAxisController : public IAxisController
 {
 public:
 	CAxisController();

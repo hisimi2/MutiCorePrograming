@@ -7,6 +7,7 @@
 #include <atomic>
 #include <thread>
 #include <memory>
+#include <future> // std::future 사용을 위해 추가
 
 class Scheduler
 {
@@ -64,13 +65,20 @@ inline void Scheduler::run()
     {
         auto start_time = std::chrono::steady_clock::now();
 
+        std::vector<std::future<bool>> futures;
         // 모든 등록된 작업에 대해 sequence() 실행을 CTPL 스레드 풀에 요청
         for (auto& task : m_tasks)
         {
-            // CTPL의 push 메서드를 사용하여 작업을 큐에 넣습니다.
-            m_pool.push([task](int /*id*/) {
-                task->sequence();
-                });
+            // CTPL의 push 메서드를 사용하여 작업을 큐에 넣고 future를 받습니다.
+            futures.push_back(m_pool.push([task](int /*id*/) {
+                return task->sequence();
+                }));
+        }
+
+        // 모든 작업이 완료될 때까지 기다립니다.
+        for (auto& f : futures)
+        {
+            f.get();
         }
 
         auto end_time = std::chrono::steady_clock::now();
