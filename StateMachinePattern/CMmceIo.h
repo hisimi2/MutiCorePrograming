@@ -11,6 +11,8 @@ class CMmceIo : public IDio, public IPeriodicTask
 {
     bool sequence() override;
 
+	int m_nTotalBytes = 16; // 예시: 총 16바이트의 I/O 데이터
+
 public:
     CMmceIo();
     ~CMmceIo() override;

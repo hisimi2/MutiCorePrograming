@@ -14,18 +14,39 @@ CMmceIo::~CMmceIo()
 void CMmceIo::out(int nChannel, bool bStatus)
 {
 	// 출력번호의 데이터를 Bit연산하여 전체 출력 byte에 반영하는 코드 구현
+
+    if ((m_nTotalBytes * 8) < nChannel)
+    {
+        TRACE("Buffer Number is too much high.");
+        return;
+    }
+    unsigned int uIndex = (UINT)(nChannel / 8);
+    if (FALSE == bStatus)
+    {
+        m_outputBuffer[uIndex] &= ~(1 << (nChannel % 8));
+    }
+    else
+    {
+        m_outputBuffer[uIndex] |= 1 << (nChannel % 8);
+    }
 }
 
 bool CMmceIo::out(int nChannel)
 {
 	// 전체 출력 byte를 가지고 해당 nChannel의 상태를 Bit연산으로 추출하는 코드 구현
-	return false; // 자리 표시자 반환값
+    unsigned int uIndex = (UINT)(nChannel / 8);
+    int nReturnValue = (m_outputBuffer[uIndex] >> (nChannel % 8) & 1);
+    return nReturnValue;
 }
 
 bool CMmceIo::in(int nChannel)
 {
 	// 전체 입력 byte를 가지고 해당 nChannel의 상태를 Bit연산으로 추출하는 코드 구현
-	return false; // 자리 표시자 반환값
+    unsigned int uIndex = (UINT)(nChannel / 8);
+    int nReturnValue = (m_inputBuffer[uIndex] >> (nChannel % 8) & 1);
+
+    return nReturnValue;
+
 }
 
 // 전용 I/O 스레드가 실행할 함수
@@ -43,7 +64,6 @@ void CMmceIo::ioThreadFunc()
 
         // 여기서 느린 Blocking API 호출
         std::vector<byte> localInputBuffer = UpdateHardwareAndWait(localOutputBuffer);
-
         {
             // 공유 버퍼에 최신 입력 데이터를 씀
             std::lock_guard<std::mutex> lock(m_ioMutex);
