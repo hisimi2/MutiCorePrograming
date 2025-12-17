@@ -47,10 +47,10 @@ protected:
 
 private:
 	// --- 비즈니스 로직 객체들 ---
-	CMmceIo m_mmceIo;
-	COPSwitch m_StartSwitch;
-	CRobot m_Robot;
-	std::vector<std::unique_ptr<COPSwitch>> m_switches;
+	CMmceIo		m_mmceIo;
+	COPSwitch	m_StartSwitch;
+	CRobot		m_Robot;
+	
 
 	// --- 스케줄링 관련 멤버 ---
 	std::unique_ptr<ctpl::thread_pool> m_pThreadPool;

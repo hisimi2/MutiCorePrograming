@@ -9,7 +9,7 @@
 #include <mutex>
 
 // COPSwitch: I/O 스위치 제어 클래스
-class COPSwitch : public IPeriodicTask, public IOPSwitch
+class COPSwitch : public IOPSwitch, public IPeriodicTask
 {
 	IDio& m_Io;
 	// m_bStatus는 m_status(atomic)으로 대체하여 스레드 안전성 확보

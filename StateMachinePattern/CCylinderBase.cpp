@@ -117,40 +117,15 @@ bool CCylinderBase::isActB()
 	return false;
 }
 
-void CCylinderBase::actAAsync()
-{
-	if (INVALID != m_nOutA)
-	{
-		// m_pDIO->out(m_nOutA, true);
-	}
-
-	if (INVALID != m_nOutB)
-	{
-		// m_pDIO->out(m_nOutB, false);
-	}
-}
-
-void CCylinderBase::actBAsync()
-{
-	if (INVALID != m_nOutA)
-	{
-		// m_pDIO->out(m_nOutA, false);
-	}
-	if (INVALID != m_nOutB)
-	{
-		// m_pDIO->out(m_nOutB, true);
-	}
-}
-
 void CCylinderBase::setName(string& strData)
 {
 	m_strName = strData;
 }
 
-int CCylinderBase::actA(BOOL bManual)
+int	CCylinderBase::actA(bool bManual)
 {
 	CTimer checkTimeOut(static_cast<long long>(m_dTimer));
-	actAAsync();
+
 	checkTimeOut.startTimer();
 	while (1)
 	{
@@ -170,10 +145,10 @@ int CCylinderBase::actA(BOOL bManual)
 	}
 }
 
-int CCylinderBase::actB(BOOL bManual)
+int CCylinderBase::actB(bool bManual)
 {
 	CTimer checkTimeOut(static_cast<long long>(m_dTimer));
-	actBAsync();
+	
 	checkTimeOut.startTimer();
 	while (1)
 	{
@@ -192,7 +167,6 @@ int CCylinderBase::actB(BOOL bManual)
 		}
 	}
 }
-
 
 void CCylinderBase::setDelay(double dTimer, UINT uDelay)
 {

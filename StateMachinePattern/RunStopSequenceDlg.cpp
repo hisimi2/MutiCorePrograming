@@ -125,9 +125,8 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
 
 	// 스케줄러에 모든 작업 등록
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_mmceIo, [](IPeriodicTask*){}));
 	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_StartSwitch, [](IPeriodicTask*){}));
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_Robot, [](IPeriodicTask*){})); // 수정 코드: &m_Robot를 IPeriodicTask*로 암시적 업캐스팅 (CRobot이 IPeriodicTask를 public으로 상속받으므로)
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_Robot, [](IPeriodicTask*){}));
 
 	// 3. 스케줄러 시작
 	m_pScheduler->start();

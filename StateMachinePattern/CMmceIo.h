@@ -1,16 +1,13 @@
 #pragma once
 #include "IDio.h"
-#include "IPeriodicTask.h"
 #include <thread>
 #include <atomic>
 #include <mutex>
 #include <vector>
 
 
-class CMmceIo : public IDio, public IPeriodicTask
+class CMmceIo : public IDio
 {
-    bool sequence() override;
-
 	int m_nTotalBytes = 16; // 예시: 총 16바이트의 I/O 데이터
 
 public:
@@ -20,13 +17,11 @@ public:
     bool out(int nChannel) override;
     bool in(int nChannel) override;
 
+private:
+    void ioThreadFunc(); // 전용 I/O 스레드가 실행할 함수
     void startIoThread();
     void stopIoThread();
 
-private:
-    void ioThreadFunc(); // 전용 I/O 스레드가 실행할 함수
-    void prepareOutputBuffer(); // 추가: prepareOutputBuffer 선언
-    void processInputBuffer(); // 추가: prepareOutputBuffer 선언
     std::vector<byte> UpdateHardwareAndWait(const std::vector<byte>& outputBuffer);
 
     std::thread m_ioThread;

@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "CUnit.h"
 
-CUnit::CUnit(std::string name)
-	: m_strName(name), m_pStartSwitch(NULL), m_pCurrentStep(NULL) // <- 수정: NULL 체크 후 빈 문자열로 초기화
+// 생성자 초기화 리스트에서 m_StartSwitch를 초기화
+CUnit::CUnit(std::string name, IOPSwitch& startSwitch)
+	: m_strName(name), m_StartSwitch(startSwitch), m_pCurrentStep(nullptr)
 {
 }
 
 CUnit::~CUnit()
 {
-	// Step 객체들은 각 유닛의 소멸자에서 해제합니다.
 }
 
 void CUnit::setStep(IStep* pStep)
@@ -18,14 +18,14 @@ void CUnit::setStep(IStep* pStep)
 
 bool CUnit::sequence()
 {
-	if(!m_pStartSwitch)
-		return false;
+	// if(!m_pStartSwitch) // 레퍼런스는 항상 유효하므로 이 검사는 더 이상 필요 없음
 
 	// 시작 스위치가 꺼져 있으면 대기
-	if (!m_pStartSwitch->getSwitchStatus())
+	// 포인터 연산자(->)를 멤버 접근 연산자(.)로 변경
+	if (!m_StartSwitch.getSwitchStatus())
 	{
-		Sleep(10);
-		return 0;
+		// Sleep(10); // Non-Blocking 원칙에 따라 Sleep 제거
+		return true; // 대기 상태도 정상적인 동작이므로 true 반환
 	}
 
 	if (m_pCurrentStep)
@@ -36,5 +36,5 @@ bool CUnit::sequence()
 			setStep(pNextStep);
 		}
 	}
-	return 0;
+	return true;
 }

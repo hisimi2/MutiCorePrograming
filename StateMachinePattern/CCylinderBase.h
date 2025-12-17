@@ -1,15 +1,16 @@
 #pragma once
+#include "CSubject.h"
+#include "ICylinder.h"
 #include <string>
 #include <vector>
-#include <cstdarg>
-#include "CSubject.h"
 
 #define INVALID 0xFFFFFFFF
 #define MANUAL true
 
-// 실린더의 공통 기능을 담는 기반 클래스
-class CCylinderBase : public CSubject
+// ICylinder를 가상으로 상속하도록 수정
+class CCylinderBase : public virtual ICylinder, public CSubject
 {
+protected:
 	vector<UINT> m_ASensor, m_BSensor;
 	double		m_dTimer;
 	UINT		m_uDelay = 1000;
@@ -28,12 +29,10 @@ public:
 	virtual ~CCylinderBase() {};
 	void		setSensorPortA(UINT uCount, va_list& list);
 	void		setSensorPortB(UINT uCount, va_list& list);
-	bool		isActA();
-	bool		isActB();
-	void		actAAsync();
-	void		actBAsync();
-	int			actA(BOOL bManual = MANUAL);
-	int			actB(BOOL bManual = MANUAL);
+	virtual int			actA(bool bManual = false) override;
+	virtual int			actB(bool bManual = false) override;
+	virtual bool		isActA() override;
+	virtual bool		isActB() override;
 
 	void		setName(string& strData);
 	void		setDelay(double dTimer = 3.0, UINT uDelay = 1);

@@ -203,7 +203,10 @@
     <ClInclude Include="Framework\IOPSwitch.h" />
     <ClInclude Include="Framework\IStep.h" />
     <ClInclude Include="IAxisController.h" />
+    <ClInclude Include="ICylinder.h" />
     <ClInclude Include="IDio.h" />
+    <ClInclude Include="IGripperCylinder.h" />
+    <ClInclude Include="IVerticalCylinder.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RunStopSequence.h" />
     <ClInclude Include="RunStopSequenceDlg.h" />
@@ -223,6 +226,7 @@
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CVerticalCylinder.cpp" />
     <ClCompile Include="Framework\CUnit.cpp" />
+    <ClCompile Include="ICylinder.cpp" />
     <ClCompile Include="RunStopSequence.cpp" />
     <ClCompile Include="RunStopSequenceDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

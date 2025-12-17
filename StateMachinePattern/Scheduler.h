@@ -61,24 +61,41 @@ inline void Scheduler::stop()
 
 inline void Scheduler::run()
 {
+    // 타임아웃 시간을 스케줄러 주기보다 약간 길게 설정합니다.
+    const auto timeout = m_interval + std::chrono::milliseconds(5);
+
     while (!m_stop)
     {
         auto start_time = std::chrono::steady_clock::now();
 
         std::vector<std::future<bool>> futures;
-        // 모든 등록된 작업에 대해 sequence() 실행을 CTPL 스레드 풀에 요청
         for (auto& task : m_tasks)
         {
-            // CTPL의 push 메서드를 사용하여 작업을 큐에 넣고 future를 받습니다.
             futures.push_back(m_pool.push([task](int /*id*/) {
                 return task->sequence();
                 }));
         }
 
-        // 모든 작업이 완료될 때까지 기다립니다.
-        for (auto& f : futures)
+        // 모든 작업이 완료될 때까지 '타임아웃을 가지고' 기다립니다.
+        for (size_t i = 0; i < futures.size(); ++i)
         {
-            f.get();
+            auto& f = futures[i];
+            // wait_for는 지정된 시간 동안만 기다립니다.
+            std::future_status status = f.wait_for(timeout);
+
+            if (status == std::future_status::timeout)
+            {
+                // 타임아웃이 발생한 경우, 심각한 문제이므로 로그를 남깁니다.
+                // 이 로그를 통해 어떤 작업이 문제를 일으키는지 찾을 수 있습니다.
+                // 예: TRACE("작업 %zu번이 타임아웃되었습니다.\n", i);
+                
+                // 여기에 정책을 추가할 수 있습니다. (예: 비상 정지)
+            }
+            else if (status == std::future_status::ready)
+            {
+                // 정상적으로 완료된 경우, 결과를 얻을 수 있습니다.
+                // bool result = f.get(); 
+            }
         }
 
         auto end_time = std::chrono::steady_clock::now();

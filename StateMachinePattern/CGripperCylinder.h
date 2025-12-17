@@ -1,27 +1,16 @@
 #pragma once
 #include "CCylinderBase.h"
-class CGripperCylinder :
-    public CCylinderBase
-{
-public:
-    CGripperCylinder(std::string name, int nOnBit, int nOffBit)
-        : CCylinderBase(name, nOnBit, nOffBit)
-    {
-    }
+#include "IGripperCylinder.h" // IGripperCylinder 인터페이스 포함
 
-    int clamp(bool bManual = MANUAL) {
-        return actA(bManual);
-    }
-    int unclamp(bool bManual = MANUAL) {
-		return actB(bManual);
-    }
-    bool isClamp()
-    {
-		return isActA();
-    }
-    bool isUnclamp()
-    {
-		return isActB();
-    }
+class CGripperCylinder : public CCylinderBase, public IGripperCylinder
+{
+public: // 생성자를 public으로 변경
+	CGripperCylinder(std::string name, int nOnBit, int nOffBit);
+
+	// IGripperCylinder 인터페이스 구현
+	int		clamp(bool bManual = MANUAL)override;
+	int		unclamp(bool bManual = MANUAL) override;
+	bool	isClamp() override;
+	bool	isUnclamp() override;
 };
 

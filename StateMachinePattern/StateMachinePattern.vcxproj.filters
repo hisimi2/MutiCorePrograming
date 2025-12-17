@@ -39,6 +39,9 @@
     <ClCompile Include="CVerticalCylinder.cpp">
       <Filter>Actuator\Cylinder</Filter>
     </ClCompile>
+    <ClCompile Include="ICylinder.cpp">
+      <Filter>Actuator\Cylinder</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CRobot.h" />
@@ -101,6 +104,15 @@
       <Filter>Actuator\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="CVerticalCylinder.h">
+      <Filter>Actuator\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="ICylinder.h">
+      <Filter>Actuator\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="IGripperCylinder.h">
+      <Filter>Actuator\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="IVerticalCylinder.h">
       <Filter>Actuator\Cylinder</Filter>
     </ClInclude>
   </ItemGroup>
