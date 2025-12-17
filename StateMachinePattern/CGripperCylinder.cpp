@@ -1,30 +1,48 @@
 #include "stdafx.h"
 #include "CGripperCylinder.h"
 
-
 CGripperCylinder::CGripperCylinder(std::string name, int nOnBit, int nOffBit)
-    : CCylinderBase(name, nOnBit, nOffBit)
+	: CCylinderBase(name, nOnBit, nOffBit)
 {
 }
 
-// IGripperCylinder 인터페이스 구현
 int CGripperCylinder::clamp(bool bManual)
 {
-
-    return CCylinderBase::actA(bManual);
+	return actA(bManual);
 }
 
 int CGripperCylinder::unclamp(bool bManual)
 {
-    return CCylinderBase::actB(bManual);
+	return actB(bManual);
 }
 
 bool CGripperCylinder::isClamp()
 {
+	return isActA();
+}
+
+bool CGripperCylinder::isUnclamp()
+{
+	return isActB();
+}
+
+// C4250 경고 해결을 위해 ICylinder 함수 명시적 재정의
+int CGripperCylinder::actA(bool bManual)
+{
+	return CCylinderBase::actA(bManual);
+}
+
+int CGripperCylinder::actB(bool bManual)
+{
+	return CCylinderBase::actB(bManual);
+}
+
+bool CGripperCylinder::isActA()
+{
 	return CCylinderBase::isActA();
 }
 
-bool CGripperCylinder::isUnclamp() 
+bool CGripperCylinder::isActB()
 {
-    return CCylinderBase::isActB();
+	return CCylinderBase::isActB();
 }
