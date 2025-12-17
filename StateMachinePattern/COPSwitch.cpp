@@ -5,31 +5,37 @@ COPSwitch::COPSwitch(IDio& io)
 	: m_Io(io)
 	, m_BlinkTimer(500)
 {
-	// 스레드 풀 기반이므로 생성자에서 아무것도 하지 않음
 }
 
 COPSwitch::~COPSwitch()
 {
-	// 스레드 생명주기를 관리하지 않으므로 소멸자에서 아무것도 하지 않음
 }
 
-bool COPSwitch::getSwitchStatus()
+bool COPSwitch::getSwitchStatus() 
 {
 	return m_status.load();
 }
 
 void COPSwitch::setSwitchStatus(bool bStatus)
 {
-	m_status.store(bStatus != FALSE);
+	m_status.store(bStatus);
+	// 상태가 외부에서 변경되었을 때 LED 즉시 업데이트
+	updateLed();
 }
 
-// 헤더와 일치하도록 반환 타입을 void로 수정
 bool COPSwitch::sequence()
 {
-	// 현재 상태(m_status)와 설정(m_type, m_isBlink)에 따라 LED 및 출력 제어
-	std::lock_guard<std::mutex> lock(m_dioMutex); // DIO 접근 동기화
+	std::lock_guard<std::mutex> lock(m_logicMutex);
 
 	bool sensorStatus = checkInSensor();
+	updateStatusFromSensor(sensorStatus);
+	updateLed();
+
+	return true;
+}
+
+void COPSwitch::updateStatusFromSensor(bool sensorStatus)
+{
 	bool currentStatus = m_status.load();
 
 	switch (m_type)
@@ -50,7 +56,11 @@ bool COPSwitch::sequence()
 	}
 	
 	m_status.store(currentStatus);
+}
 
+void COPSwitch::updateLed()
+{
+	bool currentStatus = m_status.load();
 	if (m_isBlink && currentStatus)
 	{
 		if (m_BlinkTimer.isOver())
@@ -64,11 +74,7 @@ bool COPSwitch::sequence()
 	{
 		setLED(currentStatus);
 	}
-
-	return true;
 }
-
-// --- 나머지 멤버 함수 구현 ---
 
 COPSwitch& COPSwitch::setInput(const std::vector<int>& inputs)
 {

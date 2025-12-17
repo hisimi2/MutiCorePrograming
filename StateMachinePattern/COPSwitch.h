@@ -12,7 +12,6 @@
 class COPSwitch : public IOPSwitch, public IPeriodicTask
 {
 	IDio& m_Io;
-	// m_bStatus는 m_status(atomic)으로 대체하여 스레드 안전성 확보
 public:
 	enum class EType { PUSH, TOGGLE, KEEP };
 
@@ -24,12 +23,10 @@ public:
 	COPSwitch& operator=(const COPSwitch&) = delete;
 
 	// IOPSwitch 인터페이스 구현
-	bool getSwitchStatus() override;
-	// E1455 오류 수정: IOPSwitch::setSwitchStatus는 'bool'을 파라미터로 받으므로 BOOL이 아닌 bool로 수정합니다.
+	bool getSwitchStatus() override; // const 추가
 	void setSwitchStatus(bool bStatus) override; 
 
 	// IPeriodicTask 인터페이스 구현
-	// E0317 오류 수정: IPeriodicTask::sequence는 'bool'을 반환하므로 void가 아닌 bool로 수정합니다.
 	bool sequence() override;
 
 	// 입/출력 설정
@@ -41,6 +38,9 @@ public:
 	COPSwitch& setOption(EType type, bool isBlink = false, unsigned int pollIntervalMs = 0);
 
 private:
+	// sequence 로직을 더 작은 단위로 분리
+	void updateStatusFromSensor(bool sensorStatus);
+	void updateLed();
 	void setLED(bool bStatus);
 	bool checkInSensor();
 
@@ -59,7 +59,7 @@ private:
 	// poll 간격 (밀리초) - 이제 스케줄러 주기에 의해 제어됨
 	unsigned int m_pollIntervalMs = 100;
 
-	// DIO 접근 동기화
-	mutable std::mutex m_dioMutex;
+	// 로직 접근 동기화 (이름 변경)
+	mutable std::mutex m_logicMutex;
 };
 

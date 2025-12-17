@@ -16,7 +16,7 @@ IStep* CRobotPickStep::execute(CUnit* pUnit)
         // 다음 단계(예: 그리퍼 닫기)로 전환하거나,
         // 시퀀스를 종료하기 위해 nullptr을 반환할 수 있다.
         // return pRobot->m_pGripCloseStep.get();
-        return nullptr;
+        return this;
     }
 
     return this;

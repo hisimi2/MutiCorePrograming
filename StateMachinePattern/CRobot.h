@@ -42,16 +42,16 @@ private:
         auto gripCylinder = std::make_unique<CGripperCylinder>("Grip", 0, 0);
 
         // 인터페이스 포인터로 관리
-        m_Z = std::move(zCylinder);
-        m_Grip = std::move(gripCylinder);
+        m_Z     = std::move(zCylinder);
+        m_Grip  = std::move(gripCylinder);
         m_XAxis = std::make_unique<CAxisController>();
         m_YAxis = std::make_unique<CAxisController>();
     }
 
     // 인터페이스 타입의 스마트 포인터로 변경
-    std::unique_ptr<IVerticalCylinder> m_Z;
-    std::unique_ptr<IGripperCylinder> m_Grip;
-	std::unique_ptr<IAxisController> m_XAxis;
-	std::unique_ptr<IAxisController> m_YAxis;
+    std::unique_ptr<IVerticalCylinder>  m_Z;
+    std::unique_ptr<IGripperCylinder>   m_Grip;
+	std::unique_ptr<IAxisController>    m_XAxis;
+	std::unique_ptr<IAxisController>    m_YAxis;
 };
 
