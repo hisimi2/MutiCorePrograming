@@ -18,9 +18,16 @@ bool COPSwitch::getSwitchStatus()
 
 void COPSwitch::setSwitchStatus(bool bStatus)
 {
-	m_status.store(bStatus);
-	// 상태가 외부에서 변경되었을 때 LED 즉시 업데이트
-	updateLed();
+	bool previousStatus = m_status.load();
+	if (previousStatus != bStatus)
+	{
+		m_status.store(bStatus);
+		// 상태가 외부에서 변경되었을 때 LED 즉시 업데이트
+		updateLed();
+		// 상태 변경 알림
+		std::string msg = "Switch status changed to " + std::string(bStatus ? "ON" : "OFF");
+		notify(msg);
+	}
 }
 
 bool COPSwitch::sequence()
@@ -37,6 +44,7 @@ bool COPSwitch::sequence()
 void COPSwitch::updateStatusFromSensor(bool sensorStatus)
 {
 	bool currentStatus = m_status.load();
+	bool previousStatus = currentStatus;
 
 	switch (m_type)
 	{
@@ -55,7 +63,13 @@ void COPSwitch::updateStatusFromSensor(bool sensorStatus)
 		break;
 	}
 	
-	m_status.store(currentStatus);
+	if (previousStatus != currentStatus)
+	{
+		m_status.store(currentStatus);
+		// 상태 변경 알림
+		std::string msg = "Switch status changed to " + std::string(currentStatus ? "ON" : "OFF");
+		notify(msg);
+	}
 }
 
 void COPSwitch::updateLed()

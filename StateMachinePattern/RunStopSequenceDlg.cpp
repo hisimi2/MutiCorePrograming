@@ -114,6 +114,7 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// --- Observer 등록 ---
+	m_StartSwitch.attach(this); // m_StartSwitch에 대한 Observer 등록
 	m_Robot.attach(this);
 
 	// --- 스레드 풀 및 스케줄러 초기화 ---
@@ -165,7 +166,13 @@ afx_msg LRESULT CRunStopSequenceDlg::OnUpdateActionList(WPARAM wParam, LPARAM lP
 	CString str(msg);
 	
 	// 리스트박스에 추가
-	m_ActionList.AddString(str);
+	int nIndex = m_ActionList.AddString(str);
+
+	// 마지막으로 추가된 항목이 보이도록 스크롤합니다.
+	if (nIndex >= 0)
+	{
+		m_ActionList.SetTopIndex(nIndex);
+	}
 
 	// 동적으로 할당된 메모리 해제
 	delete[] msg;
