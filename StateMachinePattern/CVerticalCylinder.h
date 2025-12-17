@@ -9,8 +9,8 @@ public: // 생성자를 public으로 변경
 	CVerticalCylinder(std::string name, int nOnBit, int nOffBit);
 
 	// IVerticalCylinder 인터페이스 구현
-	int up(bool bManual = MANUAL) override;
-	int down(bool bManual = MANUAL) override;
+	int up(bool bManual = MANUAL_OPERATION) override;
+	int down(bool bManual = MANUAL_OPERATION) override;
 	bool isUp() override;
 	bool isDown() override;
 };

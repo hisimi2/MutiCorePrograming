@@ -2,28 +2,23 @@
 #include "CCylinderBase.h"
 #include "CTimer.h"
 
+constexpr int INVALID = -1;
 
-void CCylinderBase::setSensorPortA(UINT uCount, va_list& list)
+// std::initializer_list를 사용하여 타입-안전하게 센서 포트 설정
+void		CCylinderBase::setSensorPortA(initializer_list<UINT> list)
 {
-	if (FALSE == m_ASensor.empty())
+	m_ASensor.clear();
+	for (const auto& port : list)
 	{
-		m_ASensor.clear();
-	}
-	for (UINT nIndex = 0; nIndex < uCount; nIndex++)
-	{
-		m_ASensor.push_back(va_arg(list, int));
+		m_ASensor.push_back(port);
 	}
 }
-
-void CCylinderBase::setSensorPortB(UINT uCount, va_list& list)
+void		CCylinderBase::setSensorPortB(initializer_list<UINT> list)
 {
-	if (FALSE == m_BSensor.empty())
+	m_BSensor.clear();
+	for (const auto& port : list)
 	{
-		m_BSensor.clear();
-	}
-	for (UINT nIndex = 0; nIndex < uCount; nIndex++)
-	{
-		m_BSensor.push_back(va_arg(list, int));
+		m_BSensor.push_back(port);
 	}
 }
 
