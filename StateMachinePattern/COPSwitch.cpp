@@ -4,8 +4,9 @@
 // static 멤버 변수 초기화
 IDio* COPSwitch::m_pIo = nullptr;
 
-COPSwitch::COPSwitch()
+COPSwitch::COPSwitch(std::string strName)
     : m_BlinkTimer(nullptr)
+    , m_strName(strName)
 {
 }
 
@@ -67,7 +68,7 @@ void COPSwitch::setSwitchStatus(bool bStatus)
     bool expected = !bStatus;
     if (m_status.compare_exchange_strong(expected, bStatus))
     {
-        notify((m_status ? "ON" : "OFF"));
+		notify(m_strName + (bStatus ? " ON" : " OFF"));
     }
 }
 

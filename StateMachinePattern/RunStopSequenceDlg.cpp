@@ -62,7 +62,7 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 
 	// 2. 스위치 및 로봇 객체 초기화
 	// Scheduler와 공유하기 위해 unique_ptr로 생성
-	m_pStartSwitch = std::make_unique<COPSwitch>();
+	m_pStartSwitch = std::make_unique<COPSwitch>("StartSwitch");
 	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
 
 	// Robot은 StartSwitch를 참조함
@@ -164,11 +164,22 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 // IObserver의 update 메서드 구현
 void CRunStopSequenceDlg::update(string notification)
 {
+	// 프로그램 종료 시 윈도우가 파괴된 후 스레드에서 호출될 경우를 대비하여 핸들 확인
+	if (GetSafeHwnd() == NULL)
+	{
+		return;
+	}
+
 	// 다른 스레드에서 호출되므로, UI 스레드로 메시지를 보내 안전하게 처리
 	// new를 사용하여 문자열을 힙에 복사하고 포인터를 전달
 	char* msg = new char[notification.length() + 1];
 	strcpy_s(msg, notification.length() + 1, notification.c_str());
-	PostMessage(WM_UPDATE_ACTION_LIST, (WPARAM)msg);
+	
+	// PostMessage 실패 시(예: 윈도우 소멸 직후) 메모리 해제하여 누수 방지
+	if (!PostMessage(WM_UPDATE_ACTION_LIST, (WPARAM)msg))
+	{
+		delete[] msg;
+	}
 }
 
 // 사용자 메시지 핸들러 구현

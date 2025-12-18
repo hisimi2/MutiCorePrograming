@@ -2,14 +2,7 @@
 #include "CRobotReadyStep.h"
 #include "CRobot.h"
 
-CRobotReadyStep::CRobotReadyStep()
-    : m_eStep(EStep::START)
-{
-}
 
-CRobotReadyStep::~CRobotReadyStep()
-{
-}
 
 // IStep 인터페이스의 execute 메서드를 올바른 Non-Blocking 방식으로 구현합니다.
 IStep* CRobotReadyStep::execute(CUnit* pUnit)
@@ -22,7 +15,7 @@ IStep* CRobotReadyStep::execute(CUnit* pUnit)
         // 1. 로봇 Z축을 올리고 그리퍼를 푸는 명령을 '한 번만' 내립니다.
         pRobot->getZ().up();
         pRobot->getGrip().unclamp();
-        pRobot->notify("준비 동작 시작: Z축 상승, 그리퍼 열기");
+        pRobot->notify(m_strName + "::준비 동작 시작: Z축 상승");
 
         // 2. 내부 상태를 '완료 대기'로 변경하고 즉시 리턴합니다.
         m_eStep = EStep::WAIT_COMPLETE;
@@ -35,7 +28,7 @@ IStep* CRobotReadyStep::execute(CUnit* pUnit)
         if (pRobot->getZ().isUp() && pRobot->getGrip().isUnclamp())
         {
             // 4. 동작이 완료되었으면, 다음 스텝으로 전환하기 위해 다음 스텝 포인터를 반환합니다.
-            pRobot->notify("준비 동작 완료");
+            pRobot->notify(m_strName + "::준비 동작 완료");
             m_eStep = EStep::START; // 다음을 위해 내부 상태를 초기화합니다.
             // 멤버 변수 직접 접근 대신 Getter 사용
             return pRobot->getPickStep();

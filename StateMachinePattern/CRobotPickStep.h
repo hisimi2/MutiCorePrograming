@@ -7,6 +7,8 @@ class CRobotPickStep : public IStep
 public:
     IStep*  execute(CUnit* pUnit) override;
 
+    CRobotPickStep() : m_strName("CRobotPickStep"), m_eStep(EStep::MOVE_PICKING_POSITION) {}
+
 private:
     enum class EStep
     {
@@ -22,6 +24,8 @@ private:
     };
 
     EStep m_eStep;
+
+    std::string m_strName;
 };
 
 

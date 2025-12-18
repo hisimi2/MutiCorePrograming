@@ -13,7 +13,7 @@
 class COPSwitch : public IOPSwitch, public IPeriodicTask, public CSubject
 {
 public:
-    COPSwitch();
+    COPSwitch(std::string strName);
     virtual ~COPSwitch();
 
     // IOPSwitch 인터페이스 구현
@@ -21,27 +21,20 @@ public:
     void setSwitchStatus(bool bStatus) override;
     void attach(IObserver* observer) override { CSubject::attach(observer); }
 
-
     IOPSwitch& setGroup(IOPSwitch* pObject);
     IOPSwitch& setBlink(bool bStatus);
     IOPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs);
  
- 
-
-
-
     // COPSwitch 고유 메서드
     static void setIo(IDio* pIo);
     void setInput(std::initializer_list<int> inputs);
     void setOutput(std::initializer_list<int> outputs);
 
-    
-    
-
     // IPeriodicTask 인터페이스 구현
     bool sequence() override;
 
 private:
+    std::string m_strName;
     void setLED(bool bStatus);
     bool checkInSensor();
     static IDio* m_pIo;
