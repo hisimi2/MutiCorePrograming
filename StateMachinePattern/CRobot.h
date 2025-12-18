@@ -1,58 +1,45 @@
 #pragma once
 
 #include "CUnit.h"
-#include "CVerticalCylinder.h"
-#include "CGripperCylinder.h"
-#include "CAxisController.h"
-#include "IVerticalCylinder.h" // 인터페이스 포함
-#include "IGripperCylinder.h" // 인터페이스 포함
 #include "CSubject.h"
+#include "IVerticalCylinder.h"
+#include "IGripperCylinder.h"
+#include "IAxisController.h"
+#include <memory>
 
-#include "CRobotPickStep.h"
-#include "CRobotReadyStep.h"
+// 전방 선언으로 헤더 의존성 감소
+class CRobotPickStep;
+class CRobotReadyStep;
 
 class CRobot : public CUnit, public CSubject
 {
 public:
-    CRobot(IOPSwitch& startSwitch)
-        : CUnit("Robot", startSwitch)
-    {
-        initializeComponents();
-        m_pReadyStep = std::make_unique<CRobotReadyStep>();
-        m_pPickStep = std::make_unique<CRobotPickStep>();
+    CRobot(IOPSwitch& startSwitch);
+    virtual ~CRobot();
 
-        setStep(m_pReadyStep.get());
-    }
+    // 컴포넌트 접근자 (Const Correctness 적용)
+    IVerticalCylinder&  getZ() const;
+    IGripperCylinder&   getGrip() const;
+    IAxisController&    getXAxis() const;
+    IAxisController&    getYAxis() const;
 
-    virtual ~CRobot() {};
-
-    // Getter가 구체 클래스 대신 인터페이스를 반환하도록 수정
-    IVerticalCylinder&  getZ()      { return *m_Z; }
-    IGripperCylinder&   getGrip()   { return *m_Grip; }
-	IAxisController&    getXAxis()  { return *m_XAxis; }
-	IAxisController&    getYAxis()  { return *m_YAxis; }
-
-    std::unique_ptr<IStep> m_pPickStep;
-    std::unique_ptr<IStep> m_pReadyStep;
+    // 상태 접근자 (캡슐화 적용)
+    IStep* getPickStep() const;
+    IStep* getReadyStep() const;
 
 private:
-    void initializeComponents()
-    {
-        // 실제 객체는 구체 클래스로 생성
-        auto zCylinder      = std::make_unique<CVerticalCylinder>("Hand", 0, 0);
-        auto gripCylinder   = std::make_unique<CGripperCylinder>("Grip", 0, 0);
+    void initializeComponents();
+    void initializeSteps();
 
-        // 인터페이스 포인터로 관리
-        m_Z     = std::move(zCylinder);
-        m_Grip  = std::move(gripCylinder);
-        m_XAxis = std::make_unique<CAxisController>();
-        m_YAxis = std::make_unique<CAxisController>();
-    }
+private:
+    // 컴포넌트 (인터페이스 타입의 스마트 포인터)
+    std::unique_ptr<IVerticalCylinder>  m_pZ;
+    std::unique_ptr<IGripperCylinder>   m_pGrip;
+    std::unique_ptr<IAxisController>    m_pXAxis;
+    std::unique_ptr<IAxisController>    m_pYAxis;
 
-    // 인터페이스 타입의 스마트 포인터로 변경
-    std::unique_ptr<IVerticalCylinder>  m_Z;
-    std::unique_ptr<IGripperCylinder>   m_Grip;
-	std::unique_ptr<IAxisController>    m_XAxis;
-	std::unique_ptr<IAxisController>    m_YAxis;
+    // 상태 객체
+    std::unique_ptr<IStep> m_pPickStep;
+    std::unique_ptr<IStep> m_pReadyStep;
 };
 

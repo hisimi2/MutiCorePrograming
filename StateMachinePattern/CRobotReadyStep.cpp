@@ -37,7 +37,8 @@ IStep* CRobotReadyStep::execute(CUnit* pUnit)
             // 4. 동작이 완료되었으면, 다음 스텝으로 전환하기 위해 다음 스텝 포인터를 반환합니다.
             pRobot->notify("준비 동작 완료");
             m_eStep = EStep::START; // 다음을 위해 내부 상태를 초기화합니다.
-            return pRobot->m_pPickStep.get();
+            // 멤버 변수 직접 접근 대신 Getter 사용
+            return pRobot->getPickStep();
         }
         
         // 5. 아직 완료되지 않았으면 '현재 스텝을 유지'하기 위해 this를 반환합니다.

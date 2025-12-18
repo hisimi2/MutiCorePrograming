@@ -30,11 +30,13 @@ protected:
 	HICON m_hIcon;
 
 	// 멤버 변수 선언
-	std::unique_ptr<IDio> m_pMmceIo; // <--- 타입을 IDio 인터페이스로 변경
-	std::unique_ptr<IOPSwitch> m_pStartSwitch;
-	std::unique_ptr<CRobot> m_pRobot;
-	std::unique_ptr<ctpl::thread_pool> m_pThreadPool;
-	std::unique_ptr<Scheduler> m_pScheduler;
+	std::unique_ptr<IDio>		m_pMmceIo; // <--- 타입을 IDio 인터페이스로 변경
+	std::unique_ptr<IOPSwitch>	m_pStartSwitch;
+	std::unique_ptr<CRobot>		m_pRobot;
+
+
+	std::unique_ptr<ctpl::thread_pool>	m_pThreadPool;
+	std::unique_ptr<Scheduler>			m_pScheduler;
 
 	CListBox m_ActionList;
 
