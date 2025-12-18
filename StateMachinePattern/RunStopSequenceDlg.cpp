@@ -6,6 +6,9 @@
 #include "RunStopSequenceDlg.h"
 #include "afxdialogex.h"
 
+
+#include "CMmceIo.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -55,7 +58,7 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	COPSwitch::setIo(m_pMmceIo.get()); // static Io 포인터 설정
 
 	m_pStartSwitch = std::make_unique<COPSwitch>();
-	m_pStartSwitch->setOption(COPSwitch::EType::TOGGLE);
+	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
 
 	// m_pRobot 멤버 변수 선언 및 초기화
 	m_pRobot = std::make_unique<CRobot>(*m_pStartSwitch);
@@ -131,7 +134,7 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 
 	// 스케줄러에 모든 작업 등록
 	// 수정 코드: unique_ptr에서 shared_ptr로 변환하여 전달
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(m_pStartSwitch.get(), [](IPeriodicTask*) {}));
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>((COPSwitch*)m_pStartSwitch.get(), [](IPeriodicTask*) {}));
 	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(m_pRobot.get(), [](IPeriodicTask*) {}));
 
 	// 3. 스케줄러 시작

@@ -8,7 +8,7 @@
 #include "Scheduler.h"
 #include "ctpl_stl.h"
 #include <memory>
-#include "CMmceIo.h" // CMmceIo 선언을 위해 추가
+#include "IDio.h" // CMmceIo.h 대신 IDio.h를 포함합니다.
 
 // CRunStopSequenceDlg 대화 상자
 class CRunStopSequenceDlg : public CDialogEx, public IObserver
@@ -29,9 +29,9 @@ protected:
 protected:
 	HICON m_hIcon;
 
-	// 멤버 변수 선언 추가
-	std::unique_ptr<CMmceIo> m_pMmceIo; // <--- 이 부분이 필요합니다.
-	std::unique_ptr<COPSwitch> m_pStartSwitch;
+	// 멤버 변수 선언
+	std::unique_ptr<IDio> m_pMmceIo; // <--- 타입을 IDio 인터페이스로 변경
+	std::unique_ptr<IOPSwitch> m_pStartSwitch;
 	std::unique_ptr<CRobot> m_pRobot;
 	std::unique_ptr<ctpl::thread_pool> m_pThreadPool;
 	std::unique_ptr<Scheduler> m_pScheduler;

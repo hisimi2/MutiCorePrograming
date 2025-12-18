@@ -26,7 +26,7 @@ protected:
 	bool sequence() override;
 
 private:
-	CTimer m_BlinkTimer{0.5}; // 기본 생성자 대신 인자 있는 생성자 사용
+	CTimer m_BlinkTimer{0.5}; // 기본 생성자 대신 0.5초로 초기화
 	std::vector<int> m_inputs;
 	std::vector<int> m_outputs;
 
