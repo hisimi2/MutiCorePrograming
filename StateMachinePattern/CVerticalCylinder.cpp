@@ -8,22 +8,22 @@ CVerticalCylinder::CVerticalCylinder(std::string name, int nOnBit, int nOffBit)
 
 int CVerticalCylinder::up(bool bManual)
 {
-	return actA(bManual);
+	return CCylinderBase::actA(bManual);
 }
 
 int CVerticalCylinder::down(bool bManual)
 {
-	return actB(bManual);
+	return CCylinderBase::actB(bManual);
 }
 
 bool CVerticalCylinder::isUp()
 {
-	return isActA();
+	return CCylinderBase::isActA();
 }
 
 bool CVerticalCylinder::isDown()
 {
-	return isActB();
+	return CCylinderBase::isActB();
 }
 
 // C4250 경고 해결을 위해 ICylinder 함수 명시적 재정의

@@ -20,6 +20,7 @@ public:
         initializeComponents();
         m_pReadyStep = std::make_unique<CRobotReadyStep>();
         m_pPickStep = std::make_unique<CRobotPickStep>();
+
         setStep(m_pReadyStep.get());
     }
 
@@ -38,8 +39,8 @@ private:
     void initializeComponents()
     {
         // 실제 객체는 구체 클래스로 생성
-        auto zCylinder = std::make_unique<CVerticalCylinder>("Hand", 0, 0);
-        auto gripCylinder = std::make_unique<CGripperCylinder>("Grip", 0, 0);
+        auto zCylinder      = std::make_unique<CVerticalCylinder>("Hand", 0, 0);
+        auto gripCylinder   = std::make_unique<CGripperCylinder>("Grip", 0, 0);
 
         // 인터페이스 포인터로 관리
         m_Z     = std::move(zCylinder);

@@ -115,6 +115,7 @@
     <ClInclude Include="IVerticalCylinder.h">
       <Filter>Actuator\Cylinder</Filter>
     </ClInclude>
+    <ClInclude Include="RunStopSequenceg.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Actuator">
@@ -152,5 +153,6 @@
     <None Include="res\RunStopSequence.rc2">
       <Filter>Etc</Filter>
     </None>
+    <None Include="Scheduler" />
   </ItemGroup>
 </Project>

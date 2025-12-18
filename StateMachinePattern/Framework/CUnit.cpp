@@ -18,16 +18,14 @@ void CUnit::setStep(IStep* pStep)
 
 bool CUnit::sequence()
 {
-	// if(!m_pStartSwitch) // 레퍼런스는 항상 유효하므로 이 검사는 더 이상 필요 없음
-
 	// 시작 스위치가 꺼져 있으면 대기
 	// 포인터 연산자(->)를 멤버 접근 연산자(.)로 변경
 	if (!m_StartSwitch.getSwitchStatus())
 	{
-		// Sleep(10); // Non-Blocking 원칙에 따라 Sleep 제거
 		return true; // 대기 상태도 정상적인 동작이므로 true 반환
 	}
 
+	Sleep(500); // 동작 실행 지연 임시 지정
 	if (m_pCurrentStep)
 	{
 		IStep* pNextStep = m_pCurrentStep->execute(this);

@@ -8,22 +8,22 @@ CGripperCylinder::CGripperCylinder(std::string name, int nOnBit, int nOffBit)
 
 int CGripperCylinder::clamp(bool bManual)
 {
-	return actA(bManual);
+	return CCylinderBase::actA(bManual);
 }
 
 int CGripperCylinder::unclamp(bool bManual)
 {
-	return actB(bManual);
+	return CCylinderBase::actB(bManual);
 }
 
 bool CGripperCylinder::isClamp()
 {
-	return isActA();
+	return CCylinderBase::isActA();
 }
 
 bool CGripperCylinder::isUnclamp()
 {
-	return isActB();
+	return CCylinderBase::isActB();
 }
 
 // C4250 경고 해결을 위해 ICylinder 함수 명시적 재정의

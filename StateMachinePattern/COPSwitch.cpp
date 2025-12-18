@@ -1,10 +1,22 @@
 #include "stdafx.h"
 #include "COPSwitch.h"
 
-COPSwitch::COPSwitch(IDio& io)
-	: m_Io(io)
-	, m_BlinkTimer(500)
+// static 멤버 변수 초기화
+IDio* COPSwitch::m_pIo = nullptr;
+
+// static 메서드 구현
+void COPSwitch::setIo(IDio* pIo)
 {
+	m_pIo = pIo;
+}
+
+// 수정된 생성자
+COPSwitch::COPSwitch()
+	: m_BlinkTimer(500)
+{
+	// m_pIo가 설정되지 않았다면 로직이 제대로 동작하지 않을 수 있으므로
+	// 방어 코드를 추가하는 것이 좋습니다.
+	ASSERT(m_pIo != nullptr);
 }
 
 COPSwitch::~COPSwitch()
@@ -121,22 +133,27 @@ COPSwitch& COPSwitch::setOption(EType type, bool isBlink, unsigned int pollInter
 
 void COPSwitch::setLED(bool bStatus)
 {
-	for (int channel : m_outputs)
+	// m_pIo를 사용하도록 수정
+	if (m_pIo)
 	{
-		m_Io.out(channel, bStatus);
+		for (int channel : m_outputs)
+		{
+			m_pIo->out(channel, bStatus);
+		}
 	}
 }
 
 bool COPSwitch::checkInSensor()
 {
-	if (m_inputs.empty())
+	// m_pIo를 사용하도록 수정
+	if (m_pIo == nullptr || m_inputs.empty())
 	{
 		return false;
 	}
 
 	for (int channel : m_inputs)
 	{
-		if (m_Io.in(channel))
+		if (m_pIo->in(channel))
 		{
 			return true; // 하나라도 켜져 있으면 true
 		}

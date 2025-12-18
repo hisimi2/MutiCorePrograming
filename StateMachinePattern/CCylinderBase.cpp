@@ -5,7 +5,7 @@
 constexpr int INVALID = -1;
 
 // std::initializer_list를 사용하여 타입-안전하게 센서 포트 설정
-void		CCylinderBase::setSensorPortA(initializer_list<UINT> list)
+void CCylinderBase::setSensorPortA(initializer_list<UINT> list)
 {
 	m_ASensor.clear();
 	for (const auto& port : list)
@@ -13,7 +13,7 @@ void		CCylinderBase::setSensorPortA(initializer_list<UINT> list)
 		m_ASensor.push_back(port);
 	}
 }
-void		CCylinderBase::setSensorPortB(initializer_list<UINT> list)
+void CCylinderBase::setSensorPortB(initializer_list<UINT> list)
 {
 	m_BSensor.clear();
 	for (const auto& port : list)
@@ -119,7 +119,7 @@ void CCylinderBase::setName(string& strData)
 
 int	CCylinderBase::actA(bool bManual)
 {
-	CTimer checkTimeOut(static_cast<long long>(m_dTimer));
+	CTimer checkTimeOut(m_dTimer);
 
 	checkTimeOut.startTimer();
 	while (1)
@@ -127,7 +127,7 @@ int	CCylinderBase::actA(bool bManual)
 		if (isActA())
 		{
 			Sleep(m_uDelay);
-			notify("CYLINDER_UP_" + m_strName);
+			
 			return TRUE;
 		}
 		else
@@ -150,7 +150,6 @@ int CCylinderBase::actB(bool bManual)
 		if (isActB())
 		{
 			Sleep(m_uDelay);
-			notify("CYLINDER_DOWN_" + m_strName);
 			return TRUE;
 		}
 		else
@@ -163,7 +162,7 @@ int CCylinderBase::actB(bool bManual)
 	}
 }
 
-void CCylinderBase::setDelay(double dTimer, UINT uDelay)
+void CCylinderBase::setDelay(long long dTimer, UINT uDelay)
 {
 	m_dTimer = dTimer;
 	m_uDelay = uDelay;

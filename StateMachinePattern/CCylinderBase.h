@@ -15,14 +15,14 @@ constexpr unsigned int INVALID_PORT = 0xFFFFFFFF;
 
 
 // ICylinder를 가상 상속하여 다이아몬드 문제 해결
-class CCylinderBase : public virtual ICylinder, public CSubject
+class CCylinderBase : public virtual ICylinder
 {
 protected:
-	vector<UINT> m_ASensor, m_BSensor;
-	double		m_dTimer;
-	UINT		m_uDelay = 1000;
-	string		m_strName;
-	UINT		m_nOutA, m_nOutB;
+	vector<UINT>	m_ASensor, m_BSensor;
+	long long		m_dTimer;
+	UINT			m_uDelay = 1000;
+	string			m_strName;
+	UINT			m_nOutA, m_nOutB;
 
 public:
 
@@ -46,6 +46,6 @@ public:
 	virtual bool		isActB() override;
 
 	void		setName(string& strData);
-	void		setDelay(double dTimer = 3.0, UINT uDelay = 1);
+	void		setDelay(long long dTimer = 3000, UINT uDelay = 1);
 };
 

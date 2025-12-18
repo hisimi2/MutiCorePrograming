@@ -3,10 +3,11 @@
 
 class CAxisController : public IAxisController
 {
+	double m_encoderPosition;
 public:
 	CAxisController();
 	~CAxisController();
-	void MoveTo(double targetPosition);
+	int MoveTo(double targetPosition) override;
 	double GetCurrentPosition();
 };
 

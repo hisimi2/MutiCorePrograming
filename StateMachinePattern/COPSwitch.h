@@ -12,11 +12,15 @@
 class COPSwitch : public IOPSwitch, public IPeriodicTask, public CSubject
 {
 public:
-	using CSubject::notify; // notify(string)을 사용할 수 있도록 추가
+	using CSubject::notify;
 	enum class EType { KEEP, PUSH, TOGGLE };
 
-	COPSwitch(IDio& io);
+	// 생성자에서 IDio 참조 제거
+	COPSwitch();
 	virtual ~COPSwitch();
+
+	// static 메서드로 IDio 인스턴스 설정
+	static void setIo(IDio* pIo);
 
 	// IOPSwitch 인터페이스 구현
 	bool getSwitchStatus() override;
@@ -37,7 +41,9 @@ private:
 	void setLED(bool bStatus);
 	bool checkInSensor();
 
-	IDio& m_Io;
+	// static 포인터 멤버로 변경
+	static IDio* m_pIo;
+
 	std::vector<int> m_inputs;
 	std::vector<int> m_outputs;
 

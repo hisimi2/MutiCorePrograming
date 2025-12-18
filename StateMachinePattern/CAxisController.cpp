@@ -10,12 +10,13 @@ CAxisController::~CAxisController()
 
 }
 
-void CAxisController::MoveTo(double targetPosition)
+int CAxisController::MoveTo(double targetPosition)
 {
-
+	m_encoderPosition = targetPosition;
+	return 0;
 }
 
 double CAxisController::GetCurrentPosition()
 {
-	return 0.0;
+	return m_encoderPosition;
 }

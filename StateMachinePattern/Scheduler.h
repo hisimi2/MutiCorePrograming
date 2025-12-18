@@ -8,6 +8,7 @@
 #include <thread>
 #include <memory>
 #include <future> // std::future 사용을 위해 추가
+#include <map>    // std::map 사용을 위해 추가
 
 class Scheduler
 {
@@ -25,6 +26,8 @@ private:
 
     ctpl::thread_pool& m_pool;
     std::vector<std::shared_ptr<IPeriodicTask>> m_tasks;
+    // 각 작업의 future와 실행 상태를 관리합니다.
+    std::map<IPeriodicTask*, std::future<bool>> m_taskFutures;
     std::thread m_schedulerThread;
     std::atomic<bool> m_stop{ false };
     std::chrono::milliseconds m_interval;
@@ -61,40 +64,39 @@ inline void Scheduler::stop()
 
 inline void Scheduler::run()
 {
-    // 타임아웃 시간을 스케줄러 주기보다 약간 길게 설정합니다.
-    const auto timeout = m_interval + std::chrono::milliseconds(5);
-
     while (!m_stop)
     {
         auto start_time = std::chrono::steady_clock::now();
 
-        std::vector<std::future<bool>> futures;
         for (auto& task : m_tasks)
         {
-            futures.push_back(m_pool.push([task](int /*id*/) {
-                return task->sequence();
-                }));
-        }
+            auto it = m_taskFutures.find(task.get());
+            bool isRunning = false;
 
-        // 모든 작업이 완료될 때까지 '타임아웃을 가지고' 기다립니다.
-        for (size_t i = 0; i < futures.size(); ++i)
-        {
-            auto& f = futures[i];
-            // wait_for는 지정된 시간 동안만 기다립니다.
-            std::future_status status = f.wait_for(timeout);
-
-            if (status == std::future_status::timeout)
+            if (it != m_taskFutures.end())
             {
-                // 타임아웃이 발생한 경우, 심각한 문제이므로 로그를 남깁니다.
-                // 이 로그를 통해 어떤 작업이 문제를 일으키는지 찾을 수 있습니다.
-                // 예: TRACE("작업 %zu번이 타임아웃되었습니다.\n", i);
-                
-                // 여기에 정책을 추가할 수 있습니다. (예: 비상 정지)
+                // 작업이 이미 실행 중인지 확인합니다.
+                // wait_for(0)는 즉시 리턴하며, 작업 완료 여부를 확인할 수 있습니다.
+                if (it->second.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+                {
+                    isRunning = true;
+                    TRACE("작업이 아직 실행 중입니다. 이번 주기는 건너뜁니다.\n");
+                }
+                else
+                {
+                    // 완료되었다면 맵에서 제거합니다.
+                    it->second.get(); // 예외가 있다면 가져옵니다.
+                    m_taskFutures.erase(it);
+                }
             }
-            else if (status == std::future_status::ready)
+
+            // 작업이 실행 중이 아닐 때만 스레드 풀에 추가합니다.
+            if (!isRunning)
             {
-                // 정상적으로 완료된 경우, 결과를 얻을 수 있습니다.
-                // bool result = f.get(); 
+                auto future = m_pool.push([task = task](int /*id*/) {
+                    return task->sequence();
+                    });
+                m_taskFutures[task.get()] = std::move(future);
             }
         }
 

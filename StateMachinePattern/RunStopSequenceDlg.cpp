@@ -47,24 +47,28 @@ END_MESSAGE_MAP()
 
 CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
-	, m_StartSwitch(m_mmceIo) // m_StartSwitch는 m_mmceIo를 참조하여 생성
-	, m_Robot(m_StartSwitch)  // m_Robot은 m_StartSwitch를 참조하여 생성
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-	m_StartSwitch.setOption(COPSwitch::EType::TOGGLE);
+	// unique_ptr 멤버 변수 초기화
+	m_pMmceIo = std::make_unique<CMmceIo>();
+	COPSwitch::setIo(m_pMmceIo.get()); // static Io 포인터 설정
+
+	m_pStartSwitch = std::make_unique<COPSwitch>();
+	m_pStartSwitch->setOption(COPSwitch::EType::TOGGLE);
+
+	// m_pRobot 멤버 변수 선언 및 초기화
+	m_pRobot = std::make_unique<CRobot>(*m_pStartSwitch);
 }
 
 CRunStopSequenceDlg::~CRunStopSequenceDlg()
 {
-	// 소멸자가 호출될 때 unique_ptr이 자동으로 메모리를 해제합니다.
 	// 스케줄러 중지 -> 스레드 풀 중지 순서를 보장하기 위해 명시적으로 reset 호출
 	if (m_pScheduler)
 	{
 		m_pScheduler->stop();
 	}
-	m_pScheduler.reset();
-	m_pThreadPool.reset();
+	// unique_ptr은 자동으로 메모리를 해제하므로 명시적인 delete 호출이 필요 없습니다.
 }
 
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
@@ -114,8 +118,8 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// --- Observer 등록 ---
-	m_StartSwitch.attach(this); // m_StartSwitch에 대한 Observer 등록
-	m_Robot.attach(this);
+	m_pStartSwitch->attach(this); // m_StartSwitch에 대한 Observer 등록
+	m_pRobot->attach(this);
 
 	// --- 스레드 풀 및 스케줄러 초기화 ---
 	// 1. CTPL 스레드 풀 생성 (예: 하드웨어 코어 수만큼)
@@ -126,8 +130,9 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
 
 	// 스케줄러에 모든 작업 등록
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_StartSwitch, [](IPeriodicTask*){}));
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(&m_Robot, [](IPeriodicTask*){}));
+	// 수정 코드: unique_ptr에서 shared_ptr로 변환하여 전달
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(m_pStartSwitch.get(), [](IPeriodicTask*) {}));
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(m_pRobot.get(), [](IPeriodicTask*) {}));
 
 	// 3. 스케줄러 시작
 	m_pScheduler->start();
@@ -218,11 +223,12 @@ void CRunStopSequenceDlg::OnDestroy()
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
 	// 스위치 상태만 변경. sequence()는 스케줄러가 주기적으로 실행함.
-	m_StartSwitch.setSwitchStatus(true);
+	m_pStartSwitch->setSwitchStatus(true);
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
 	// 스위치 상태만 변경.
-	m_StartSwitch.setSwitchStatus(false);
+	m_pStartSwitch->setSwitchStatus(false);
 }
+
