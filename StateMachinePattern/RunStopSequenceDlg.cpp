@@ -1,4 +1,4 @@
-// RunStopSequenceDlg.cpp : ±¸Çö ÆÄÀÏ
+ï»¿// RunStopSequenceDlg.cpp : êµ¬í˜„ íŒŒì¼
 //
 
 #include "stdafx.h"
@@ -13,22 +13,22 @@
 #define new DEBUG_NEW
 #endif
 
-// »ç¿ëÀÚ Á¤ÀÇ ¸Ş½ÃÁö
+// ì‚¬ìš©ì ì •ì˜ ë©”ì‹œì§€
 #define WM_UPDATE_ACTION_LIST (WM_USER + 1)
 
-// ÀÀ¿ë ÇÁ·Î±×·¥ Á¤º¸¿¡ »ç¿ëµÇ´Â CAboutDlg ´ëÈ­ »óÀÚÀÔ´Ï´Ù.
+// ì‘ìš© í”„ë¡œê·¸ë¨ ì •ë³´ì— ì‚¬ìš©ë˜ëŠ” CAboutDlg ëŒ€í™” ìƒìì…ë‹ˆë‹¤.
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// ´ëÈ­ »óÀÚ µ¥ÀÌÅÍÀÔ´Ï´Ù.
+// ëŒ€í™” ìƒì ë°ì´í„°ì…ë‹ˆë‹¤.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Áö¿øÀÔ´Ï´Ù.
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV ì§€ì›ì…ë‹ˆë‹¤.
 
 protected:
 	DECLARE_MESSAGE_MAP();
@@ -46,32 +46,37 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-// CRunStopSequenceDlg ´ëÈ­ »óÀÚ
+// CRunStopSequenceDlg ëŒ€í™” ìƒì
 
 CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-	// unique_ptr ¸â¹ö º¯¼ö ÃÊ±âÈ­
+	// 1. IO ê°ì²´ ì´ˆê¸°í™”
+	// IOëŠ” ë‹¤ì´ì–¼ë¡œê·¸ê°€ ìœ ì¼í•˜ê²Œ ì†Œìœ í•˜ë¯€ë¡œ unique_ptr ìœ ì§€
 	m_pMmceIo = std::make_unique<CMmceIo>();
-	COPSwitch::setIo(m_pMmceIo.get()); // static Io Æ÷ÀÎÅÍ ¼³Á¤
+	
+	// ì •ì  ë©”ì„œë“œë¥¼ í†µí•œ IO ì„¤ì • (ì „ì—­ ì„¤ì •ì´ë¯€ë¡œ ì£¼ì˜ í•„ìš”)
+	COPSwitch::setIo(m_pMmceIo.get());
 
+	// 2. ìŠ¤ìœ„ì¹˜ ë° ë¡œë´‡ ê°ì²´ ì´ˆê¸°í™”
+	// Schedulerì™€ ê³µìœ í•˜ê¸° ìœ„í•´ unique_ptrë¡œ ìƒì„±
 	m_pStartSwitch = std::make_unique<COPSwitch>();
 	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
 
-	// m_pRobot ¸â¹ö º¯¼ö ¼±¾ğ ¹× ÃÊ±âÈ­
-	m_pRobot = std::make_unique<CRobot>(*m_pStartSwitch);
+	// Robotì€ StartSwitchë¥¼ ì°¸ì¡°í•¨
+	m_pRobot = std::make_shared<CRobot>(*m_pStartSwitch);
 }
 
 CRunStopSequenceDlg::~CRunStopSequenceDlg()
 {
-	// ½ºÄÉÁÙ·¯ ÁßÁö -> ½º·¹µå Ç® ÁßÁö ¼ø¼­¸¦ º¸ÀåÇÏ±â À§ÇØ ¸í½ÃÀûÀ¸·Î reset È£Ãâ
+	// ìŠ¤ì¼€ì¤„ëŸ¬ ì¤‘ì§€ -> ìŠ¤ë ˆë“œ í’€ ì¤‘ì§€ ìˆœì„œë¥¼ ë³´ì¥í•˜ê¸° ìœ„í•´ ëª…ì‹œì ìœ¼ë¡œ reset í˜¸ì¶œ
 	if (m_pScheduler)
 	{
 		m_pScheduler->stop();
 	}
-	// unique_ptrÀº ÀÚµ¿À¸·Î ¸Ş¸ğ¸®¸¦ ÇØÁ¦ÇÏ¹Ç·Î ¸í½ÃÀûÀÎ delete È£ÃâÀÌ ÇÊ¿ä ¾ø½À´Ï´Ù.
+	// shared_ptr/unique_ptrì€ ìë™ìœ¼ë¡œ ë©”ëª¨ë¦¬ë¥¼ í•´ì œí•˜ë¯€ë¡œ ëª…ì‹œì ì¸ delete í˜¸ì¶œì´ í•„ìš” ì—†ìŠµë‹ˆë‹¤.
 }
 
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
@@ -91,14 +96,14 @@ BEGIN_MESSAGE_MAP(CRunStopSequenceDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CRunStopSequenceDlg ¸Ş½ÃÁö Ã³¸®±â
+// CRunStopSequenceDlg ë©”ì‹œì§€ ì²˜ë¦¬ê¸°
 
 BOOL CRunStopSequenceDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½Ã½ºÅÛ ¸Ş´º¿¡ "Á¤º¸..." ¸Ş´º Ç×¸ñÀ» Ãß°¡ÇÕ´Ï´Ù.
-	// IDM_ABOUTBOX´Â ½Ã½ºÅÛ ¸í·É ¹üÀ§¿¡ ÀÖ¾î¾ß ÇÕ´Ï´Ù.
+	// ì‹œìŠ¤í…œ ë©”ë‰´ì— "ì •ë³´..." ë©”ë‰´ í•­ëª©ì„ ì¶”ê°€í•©ë‹ˆë‹¤.
+	// IDM_ABOUTBOXëŠ” ì‹œìŠ¤í…œ ëª…ë ¹ ë²”ìœ„ì— ìˆì–´ì•¼ í•©ë‹ˆë‹¤.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -116,31 +121,31 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 		}
 	}
 
-	// ÀÌ ´ëÈ­ »óÀÚÀÇ ¾ÆÀÌÄÜÀ» ¼³Á¤ÇÕ´Ï´Ù.
-	SetIcon(m_hIcon, TRUE);			// Å« ¾ÆÀÌÄÜÀ» ¼³Á¤ÇÕ´Ï´Ù.
-	SetIcon(m_hIcon, FALSE);		// ÀÛÀº ¾ÆÀÌÄÜÀ» ¼³Á¤ÇÕ´Ï´Ù.
+	// ì´ ëŒ€í™” ìƒìì˜ ì•„ì´ì½˜ì„ ì„¤ì •í•©ë‹ˆë‹¤.
+	SetIcon(m_hIcon, TRUE);			// í° ì•„ì´ì½˜ì„ ì„¤ì •í•©ë‹ˆë‹¤.
+	SetIcon(m_hIcon, FALSE);		// ì‘ì€ ì•„ì´ì½˜ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 
-	// --- Observer µî·Ï ---
-	m_pStartSwitch->attach(this); // m_StartSwitch¿¡ ´ëÇÑ Observer µî·Ï
+	// --- Observer ë“±ë¡ ---
+	m_pStartSwitch->attach(this); // m_StartSwitchì— ëŒ€í•œ Observer ë“±ë¡
 	m_pRobot->attach(this);
 
-	// --- ½º·¹µå Ç® ¹× ½ºÄÉÁÙ·¯ ÃÊ±âÈ­ ---
-	// 1. CTPL ½º·¹µå Ç® »ı¼º (¿¹: ÇÏµå¿ş¾î ÄÚ¾î ¼ö¸¸Å­)
+	// --- ìŠ¤ë ˆë“œ í’€ ë° ìŠ¤ì¼€ì¤„ëŸ¬ ì´ˆê¸°í™” ---
+	// 1. CTPL ìŠ¤ë ˆë“œ í’€ ìƒì„± (ì˜ˆ: í•˜ë“œì›¨ì–´ ì½”ì–´ ìˆ˜ë§Œí¼)
 	unsigned int core_count = std::thread::hardware_concurrency();
 	m_pThreadPool = std::make_unique<ctpl::thread_pool>(core_count > 0 ? core_count : 4);
 
-	// 2. ½ºÄÉÁÙ·¯ »ı¼º (¿¹: 10ms ÁÖ±â)
+	// 2. ìŠ¤ì¼€ì¤„ëŸ¬ ìƒì„± (ì˜ˆ: 10ms ì£¼ê¸°)
 	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
 
-	// ½ºÄÉÁÙ·¯¿¡ ¸ğµç ÀÛ¾÷ µî·Ï
-	// ¼öÁ¤ ÄÚµå: unique_ptr¿¡¼­ shared_ptr·Î º¯È¯ÇÏ¿© Àü´Ş
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>((COPSwitch*)m_pStartSwitch.get(), [](IPeriodicTask*) {}));
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(m_pRobot.get(), [](IPeriodicTask*) {}));
+	// 3. ìŠ¤ì¼€ì¤„ëŸ¬ì— ì‘ì—… ë“±ë¡
+	// ë¦¬íŒ©í† ë§: shared_ptrì„ ì§ì ‘ ì „ë‹¬í•˜ì—¬ ë¶ˆí•„ìš”í•œ ìºìŠ¤íŒ…ê³¼ ì»¤ìŠ¤í…€ deleter ì œê±°
+	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(dynamic_cast<IPeriodicTask*>(m_pStartSwitch.get()), [](IPeriodicTask*){}));
+	m_pScheduler->addTask(m_pRobot);
 
-	// 3. ½ºÄÉÁÙ·¯ ½ÃÀÛ
+	// 4. ìŠ¤ì¼€ì¤„ëŸ¬ ì‹œì‘
 	m_pScheduler->start();
 
-	return TRUE;  // Æ÷Ä¿½º¸¦ ÄÁÆ®·Ñ¿¡ ¼³Á¤ÇÏÁö ¾ÊÀ¸¸é TRUE¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	return TRUE;  // í¬ì»¤ìŠ¤ë¥¼ ì»¨íŠ¸ë¡¤ì— ì„¤ì •í•˜ì§€ ì•Šìœ¼ë©´ TRUEë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 }
 
 void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -156,33 +161,33 @@ void CRunStopSequenceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// IObserverÀÇ update ¸Ş¼­µå ±¸Çö
+// IObserverì˜ update ë©”ì„œë“œ êµ¬í˜„
 void CRunStopSequenceDlg::update(string notification)
 {
-	// ´Ù¸¥ ½º·¹µå¿¡¼­ È£ÃâµÇ¹Ç·Î, UI ½º·¹µå·Î ¸Ş½ÃÁö¸¦ º¸³» ¾ÈÀüÇÏ°Ô Ã³¸®
-	// new¸¦ »ç¿ëÇÏ¿© ¹®ÀÚ¿­À» Èü¿¡ º¹»çÇÏ°í Æ÷ÀÎÅÍ¸¦ Àü´Ş
+	// ë‹¤ë¥¸ ìŠ¤ë ˆë“œì—ì„œ í˜¸ì¶œë˜ë¯€ë¡œ, UI ìŠ¤ë ˆë“œë¡œ ë©”ì‹œì§€ë¥¼ ë³´ë‚´ ì•ˆì „í•˜ê²Œ ì²˜ë¦¬
+	// newë¥¼ ì‚¬ìš©í•˜ì—¬ ë¬¸ìì—´ì„ í™ì— ë³µì‚¬í•˜ê³  í¬ì¸í„°ë¥¼ ì „ë‹¬
 	char* msg = new char[notification.length() + 1];
 	strcpy_s(msg, notification.length() + 1, notification.c_str());
 	PostMessage(WM_UPDATE_ACTION_LIST, (WPARAM)msg);
 }
 
-// »ç¿ëÀÚ ¸Ş½ÃÁö ÇÚµé·¯ ±¸Çö
+// ì‚¬ìš©ì ë©”ì‹œì§€ í•¸ë“¤ëŸ¬ êµ¬í˜„
 afx_msg LRESULT CRunStopSequenceDlg::OnUpdateActionList(WPARAM wParam, LPARAM lParam)
 {
-	// Àü´Ş¹ŞÀº ¹®ÀÚ¿­ Æ÷ÀÎÅÍ¸¦ CStringÀ¸·Î º¯È¯
+	// ì „ë‹¬ë°›ì€ ë¬¸ìì—´ í¬ì¸í„°ë¥¼ CStringìœ¼ë¡œ ë³€í™˜
 	char* msg = (char*)wParam;
 	CString str(msg);
 	
-	// ¸®½ºÆ®¹Ú½º¿¡ Ãß°¡
+	// ë¦¬ìŠ¤íŠ¸ë°•ìŠ¤ì— ì¶”ê°€
 	int nIndex = m_ActionList.AddString(str);
 
-	// ¸¶Áö¸·À¸·Î Ãß°¡µÈ Ç×¸ñÀÌ º¸ÀÌµµ·Ï ½ºÅ©·ÑÇÕ´Ï´Ù.
+	// ë§ˆì§€ë§‰ìœ¼ë¡œ ì¶”ê°€ëœ í•­ëª©ì´ ë³´ì´ë„ë¡ ìŠ¤í¬ë¡¤í•©ë‹ˆë‹¤.
 	if (nIndex >= 0)
 	{
 		m_ActionList.SetTopIndex(nIndex);
 	}
 
-	// µ¿ÀûÀ¸·Î ÇÒ´çµÈ ¸Ş¸ğ¸® ÇØÁ¦
+	// ë™ì ìœ¼ë¡œ í• ë‹¹ëœ ë©”ëª¨ë¦¬ í•´ì œ
 	delete[] msg;
 
 	return 0;
@@ -192,11 +197,11 @@ void CRunStopSequenceDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ±×¸®±â¸¦ À§ÇÑ µğ¹ÙÀÌ½º ÄÁÅØ½ºÆ®ÀÔ´Ï´Ù.
+		CPaintDC dc(this); // ê·¸ë¦¬ê¸°ë¥¼ ìœ„í•œ ë””ë°”ì´ìŠ¤ ì»¨í…ìŠ¤íŠ¸ì…ë‹ˆë‹¤.
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Å¬¶óÀÌ¾ğÆ® »ç°¢Çü¿¡¼­ ¾ÆÀÌÄÜÀ» °¡¿îµ¥¿¡ ¸ÂÃä´Ï´Ù.
+		// í´ë¼ì´ì–¸íŠ¸ ì‚¬ê°í˜•ì—ì„œ ì•„ì´ì½˜ì„ ê°€ìš´ë°ì— ë§ì¶¥ë‹ˆë‹¤.
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -204,7 +209,7 @@ void CRunStopSequenceDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// ¾ÆÀÌÄÜÀ» ±×¸³´Ï´Ù.
+		// ì•„ì´ì½˜ì„ ê·¸ë¦½ë‹ˆë‹¤.
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -225,13 +230,12 @@ void CRunStopSequenceDlg::OnDestroy()
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
-	// ½ºÀ§Ä¡ »óÅÂ¸¸ º¯°æ. sequence()´Â ½ºÄÉÁÙ·¯°¡ ÁÖ±âÀûÀ¸·Î ½ÇÇàÇÔ.
+	// ìŠ¤ìœ„ì¹˜ ìƒíƒœë§Œ ë³€ê²½. sequence()ëŠ” ìŠ¤ì¼€ì¤„ëŸ¬ê°€ ì£¼ê¸°ì ìœ¼ë¡œ ì‹¤í–‰í•¨.
 	m_pStartSwitch->setSwitchStatus(true);
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
-	// ½ºÀ§Ä¡ »óÅÂ¸¸ º¯°æ.
+	// ìŠ¤ìœ„ì¹˜ ìƒíƒœë§Œ ë³€ê²½.
 	m_pStartSwitch->setSwitchStatus(false);
 }
-
