@@ -33,8 +33,7 @@ protected:
 	// [수정] 개별 멤버 변수들을 AppContext로 대체
 	std::unique_ptr<AppContext> m_pContext;
 
-	// UI 제어를 위해 포인터만 임시로 보관 (소유권은 Context에 있음)
-	std::shared_ptr<IOPSwitch> m_pStartSwitch; 
+	
 
 	CListBox m_ActionList;
 

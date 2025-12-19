@@ -108,12 +108,12 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
     m_pContext = std::make_unique<AppContext>();
 
     // 2. 필요한 객체 참조 가져오기
-    m_pStartSwitch = m_pContext->GetStartSwitch();
     auto pRobot = m_pContext->GetRobot();
+	auto pStartSwitch = m_pContext->GetStartSwitch();
 
 	// 3. Observer 등록 (UI 업데이트를 위해)
     // IOPSwitch 인터페이스에는 attach가 없으므로 dynamic_cast 사용 (또는 IOPSwitch 수정 후 직접 호출)
-	if (auto pSubject = dynamic_cast<CSubject*>(m_pStartSwitch.get()))
+	if (auto pSubject = dynamic_cast<CSubject*>(pStartSwitch.get()))
 	{
 		pSubject->attach(this);
 	}
@@ -218,17 +218,18 @@ void CRunStopSequenceDlg::OnDestroy()
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
-    // Context에서 가져온 스위치 객체 사용
-	if (m_pStartSwitch)
+	auto pStartSwitch = m_pContext->GetStartSwitch();
+	if (pStartSwitch)
     {
-        m_pStartSwitch->setSwitchStatus(true);
+		pStartSwitch->setSwitchStatus(true);
     }
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
-	if (m_pStartSwitch)
+	auto pStartSwitch = m_pContext->GetStartSwitch();
+	if (pStartSwitch)
     {
-        m_pStartSwitch->setSwitchStatus(false);
+		pStartSwitch->setSwitchStatus(false);
     }
 }

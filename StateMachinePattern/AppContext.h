@@ -58,12 +58,12 @@ public:
 
     // Getter 메서드 (필요한 객체만 노출)
     std::shared_ptr<IOPSwitch> GetStartSwitch() const { return m_pStartSwitch; }
-    std::shared_ptr<CRobot> GetRobot() const { return m_pRobot; }
+    std::shared_ptr<CRobot> GetRobot()          const { return m_pRobot; }
 
 private:
-    std::unique_ptr<IDio> m_pMmceIo;
-    std::shared_ptr<COPSwitch> m_pStartSwitch;
-    std::shared_ptr<CRobot> m_pRobot;
-    std::unique_ptr<ctpl::thread_pool> m_pThreadPool;
-    std::unique_ptr<Scheduler> m_pScheduler;
+    std::unique_ptr<IDio>               m_pMmceIo;
+    std::shared_ptr<COPSwitch>          m_pStartSwitch;
+    std::shared_ptr<CRobot>             m_pRobot;
+    std::unique_ptr<ctpl::thread_pool>  m_pThreadPool;
+    std::unique_ptr<Scheduler>          m_pScheduler;
 };
