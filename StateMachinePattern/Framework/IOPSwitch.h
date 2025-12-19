@@ -1,9 +1,10 @@
 #pragma once
 #include "IPeriodicTask.h"
 #include "IObserver.h"
+#include "CSubject.h"
 
 // IOPSwitch가 IPeriodicTask를 상속받아 주기적 실행 기능을 포함시킵니다.
-class IOPSwitch : public IPeriodicTask
+class IOPSwitch : public IPeriodicTask, public CSubject
 {
 public:
     enum class EType { KEEP, PUSH, TOGGLE };
@@ -18,7 +19,4 @@ public:
     virtual IOPSwitch& setGroup(IOPSwitch* pObject) = 0;
     virtual IOPSwitch& setBlink(bool bStatus) = 0;
     virtual IOPSwitch& setOption(EType type, bool isBlink = false, unsigned int pollIntervalMs = 500) = 0;
-
-    // Observer 패턴 지원 (CSubject의 기능을 인터페이스로 노출)
-    // virtual void attach(IObserver* observer) = 0;
 };

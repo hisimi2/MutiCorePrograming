@@ -123,12 +123,7 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	// Robot은 StartSwitch를 참조함
 	m_pRobot = std::make_shared<CRobot>(*m_pStartSwitch);
 
-	// --- Observer 등록 ---
-	// m_pStartSwitch(IOPSwitch*)를 CSubject*로 다운캐스팅하여 attach 호출
-	if (auto pSubject = dynamic_cast<CSubject*>(m_pStartSwitch.get()))
-	{
-		pSubject->attach(this);
-	}
+	m_pStartSwitch->attach(this);
 	m_pRobot->attach(this);
 
 	// --- 스레드 풀 및 스케줄러 초기화 ---

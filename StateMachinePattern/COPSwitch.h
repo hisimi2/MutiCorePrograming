@@ -10,7 +10,7 @@
 #include <initializer_list>
 
 // 상속 구조 단순화: IPeriodicTask는 IOPSwitch에 포함됨
-class COPSwitch : public IOPSwitch, public CSubject
+class COPSwitch : public IOPSwitch 
 {
 public:
     COPSwitch(std::string strName);
@@ -19,7 +19,8 @@ public:
     // IOPSwitch (및 IPeriodicTask) 인터페이스 구현
     bool getSwitchStatus() override;
     void setSwitchStatus(bool bStatus) override;
-        
+    
+    
     IOPSwitch& setGroup(IOPSwitch* pObject) override;
     IOPSwitch& setBlink(bool bStatus) override;
     IOPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs) override;

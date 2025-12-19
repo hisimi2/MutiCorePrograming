@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CUnit.h"
-#include "CSubject.h"
 #include "IVerticalCylinder.h"
 #include "IGripperCylinder.h"
 #include "IAxisController.h"
@@ -11,7 +10,7 @@
 class CRobotPickStep;
 class CRobotReadyStep;
 
-class CRobot : public CUnit, public CSubject
+class CRobot : public CUnit
 {
 public:
     CRobot(IOPSwitch& startSwitch);
