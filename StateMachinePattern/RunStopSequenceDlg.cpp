@@ -61,8 +61,8 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	COPSwitch::setIo(m_pMmceIo.get());
 
 	// 2. 스위치 및 로봇 객체 초기화
-	// Scheduler와 공유하기 위해 unique_ptr로 생성
-	m_pStartSwitch = std::make_unique<COPSwitch>("StartSwitch");
+	// Scheduler와 공유하기 위해 shared_ptr로 생성
+	m_pStartSwitch = std::make_shared<COPSwitch>("StartSwitch");
 	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
 
 	// Robot은 StartSwitch를 참조함
@@ -138,8 +138,16 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
 
 	// 3. 스케줄러에 작업 등록
-	// 리팩토링: shared_ptr을 직접 전달하여 불필요한 캐스팅과 커스텀 deleter 제거
-	m_pScheduler->addTask(std::shared_ptr<IPeriodicTask>(dynamic_cast<IPeriodicTask*>(m_pStartSwitch.get()), [](IPeriodicTask*){}));
+	// 리팩토링: 복잡한 캐스팅 제거 및 안전한 변환 사용
+	
+	// IOPSwitch 인터페이스를 IPeriodicTask로 변환 (COPSwitch는 둘 다 상속받음)
+	// dynamic_pointer_cast를 사용하면 안전하게 형변환된 shared_ptr을 얻을 수 있습니다.
+	if (auto pSwitchTask = std::dynamic_pointer_cast<IPeriodicTask>(m_pStartSwitch))
+	{
+		m_pScheduler->addTask(pSwitchTask);
+	}
+
+	// CRobot은 IPeriodicTask를 상속받으므로 암시적 변환 가능
 	m_pScheduler->addTask(m_pRobot);
 
 	// 4. 스케줄러 시작

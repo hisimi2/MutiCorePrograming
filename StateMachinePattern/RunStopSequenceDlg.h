@@ -30,9 +30,12 @@ protected:
 	HICON m_hIcon;
 
 	// 멤버 변수 선언
-	std::unique_ptr<IDio>		m_pMmceIo; // <--- 타입을 IDio 인터페이스로 변경
-	std::unique_ptr<IOPSwitch>	m_pStartSwitch;
-	std::shared_ptr<CRobot>		m_pRobot;
+	std::unique_ptr<IDio> m_pMmceIo;
+	
+	// unique_ptr -> shared_ptr로 변경하여 스케줄러와 공유 가능하게 함
+	std::shared_ptr<IOPSwitch> m_pStartSwitch;
+	
+	std::shared_ptr<CRobot> m_pRobot;
 
 
 	std::unique_ptr<ctpl::thread_pool>	m_pThreadPool;
