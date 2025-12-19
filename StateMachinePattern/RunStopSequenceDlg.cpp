@@ -33,16 +33,13 @@ protected:
 protected:
 	DECLARE_MESSAGE_MAP();
 };
-
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
 }
-
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
-
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
@@ -52,21 +49,7 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
-	// 1. IO 객체 초기화
-	// IO는 다이얼로그가 유일하게 소유하므로 unique_ptr 유지
-	m_pMmceIo = std::make_unique<CMmceIo>();
 	
-	// 정적 메서드를 통한 IO 설정 (전역 설정이므로 주의 필요)
-	COPSwitch::setIo(m_pMmceIo.get());
-
-	// 2. 스위치 및 로봇 객체 초기화
-	// Scheduler와 공유하기 위해 shared_ptr로 생성
-	m_pStartSwitch = std::make_shared<COPSwitch>("StartSwitch");
-	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
-
-	// Robot은 StartSwitch를 참조함
-	m_pRobot = std::make_shared<CRobot>(*m_pStartSwitch);
 }
 
 CRunStopSequenceDlg::~CRunStopSequenceDlg()
@@ -125,8 +108,27 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
+	// 1. IO 객체 초기화
+	// IO는 다이얼로그가 유일하게 소유하므로 unique_ptr 유지
+	m_pMmceIo = std::make_unique<CMmceIo>();
+
+	// 정적 메서드를 통한 IO 설정 (전역 설정이므로 주의 필요)
+	COPSwitch::setIo(m_pMmceIo.get());
+
+	// 2. 스위치 및 로봇 객체 초기화
+	// Scheduler와 공유하기 위해 shared_ptr로 생성
+	m_pStartSwitch = std::make_shared<COPSwitch>("StartSwitch");
+	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
+
+	// Robot은 StartSwitch를 참조함
+	m_pRobot = std::make_shared<CRobot>(*m_pStartSwitch);
+
 	// --- Observer 등록 ---
-	m_pStartSwitch->attach(this); // m_StartSwitch에 대한 Observer 등록
+	// m_pStartSwitch(IOPSwitch*)를 CSubject*로 다운캐스팅하여 attach 호출
+	if (auto pSubject = dynamic_cast<CSubject*>(m_pStartSwitch.get()))
+	{
+		pSubject->attach(this);
+	}
 	m_pRobot->attach(this);
 
 	// --- 스레드 풀 및 스케줄러 초기화 ---
@@ -142,10 +144,7 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	
 	// IOPSwitch 인터페이스를 IPeriodicTask로 변환 (COPSwitch는 둘 다 상속받음)
 	// dynamic_pointer_cast를 사용하면 안전하게 형변환된 shared_ptr을 얻을 수 있습니다.
-	if (auto pSwitchTask = std::dynamic_pointer_cast<IPeriodicTask>(m_pStartSwitch))
-	{
-		m_pScheduler->addTask(pSwitchTask);
-	}
+	m_pScheduler->addTask(m_pStartSwitch); 
 
 	// CRobot은 IPeriodicTask를 상속받으므로 암시적 변환 가능
 	m_pScheduler->addTask(m_pRobot);
