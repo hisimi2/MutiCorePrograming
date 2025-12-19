@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IOPSwitch.h"
-#include "IPeriodicTask.h"
 #include "CSubject.h"
 #include "IDio.h"
 #include "CTimer.h"
@@ -10,28 +9,29 @@
 #include <mutex>
 #include <initializer_list>
 
-class COPSwitch : public IOPSwitch, public IPeriodicTask, public CSubject
+// 상속 구조 단순화: IPeriodicTask는 IOPSwitch에 포함됨
+class COPSwitch : public IOPSwitch 
 {
 public:
     COPSwitch(std::string strName);
     virtual ~COPSwitch();
 
-    // IOPSwitch 인터페이스 구현
+    // IOPSwitch (및 IPeriodicTask) 인터페이스 구현
     bool getSwitchStatus() override;
     void setSwitchStatus(bool bStatus) override;
-    void attach(IObserver* observer) override { CSubject::attach(observer); }
+    
+    
+    IOPSwitch& setGroup(IOPSwitch* pObject) override;
+    IOPSwitch& setBlink(bool bStatus) override;
+    IOPSwitch& setOption(EType type, bool isBlink = false, unsigned int pollIntervalMs = 500) override;
 
-    IOPSwitch& setGroup(IOPSwitch* pObject);
-    IOPSwitch& setBlink(bool bStatus);
-    IOPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs);
- 
+    // IPeriodicTask 구현
+    bool sequence() override;
+
     // COPSwitch 고유 메서드
     static void setIo(IDio* pIo);
     void setInput(std::initializer_list<int> inputs);
     void setOutput(std::initializer_list<int> outputs);
-
-    // IPeriodicTask 인터페이스 구현
-    bool sequence() override;
 
 private:
     std::string m_strName;
@@ -48,9 +48,9 @@ private:
     EType m_type = EType::PUSH;
     bool m_isBlink = false;
     IOPSwitch* m_pGroup = nullptr;
-    unsigned int m_pollIntervalMs = 10; // 폴링 주기 (ms)
+    unsigned int m_pollIntervalMs = 10;
 
     CTimer* m_BlinkTimer = nullptr;
-    std::mutex m_logicMutex; // 로직 접근 동기화를 위한 뮤텍스
+    std::mutex m_logicMutex;
 };
 

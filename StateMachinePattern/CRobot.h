@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CUnit.h"
-#include "CSubject.h"
 #include "IVerticalCylinder.h"
 #include "IGripperCylinder.h"
 #include "IAxisController.h"
@@ -11,7 +10,7 @@
 class CRobotPickStep;
 class CRobotReadyStep;
 
-class CRobot : public CUnit, public CSubject
+class CRobot : public CUnit
 {
 public:
     CRobot(IOPSwitch& startSwitch);
@@ -31,7 +30,6 @@ private:
     void initializeComponents();
     void initializeSteps();
 
-private:
     // 컴포넌트 (인터페이스 타입의 스마트 포인터)
     std::unique_ptr<IVerticalCylinder>  m_pZ;
     std::unique_ptr<IGripperCylinder>   m_pGrip;
