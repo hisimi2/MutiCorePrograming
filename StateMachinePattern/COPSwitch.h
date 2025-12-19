@@ -23,7 +23,7 @@ public:
     
     IOPSwitch& setGroup(IOPSwitch* pObject) override;
     IOPSwitch& setBlink(bool bStatus) override;
-    IOPSwitch& setOption(EType type, bool isBlink, unsigned int pollIntervalMs) override;
+    IOPSwitch& setOption(EType type, bool isBlink = false, unsigned int pollIntervalMs = 500) override;
 
     // IPeriodicTask ±¸Çö
     bool sequence() override;

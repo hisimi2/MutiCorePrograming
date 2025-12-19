@@ -49,17 +49,13 @@ CRunStopSequenceDlg::CRunStopSequenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_RUNSTOPSEQUENCE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	
+    
+    // 생성자에서는 아무것도 하지 않거나, Context를 여기서 생성할 수도 있음
 }
 
 CRunStopSequenceDlg::~CRunStopSequenceDlg()
 {
-	// 스케줄러 중지 -> 스레드 풀 중지 순서를 보장하기 위해 명시적으로 reset 호출
-	if (m_pScheduler)
-	{
-		m_pScheduler->stop();
-	}
-	// shared_ptr/unique_ptr은 자동으로 메모리를 해제하므로 명시적인 delete 호출이 필요 없습니다.
+    // AppContext 소멸자가 호출되면서 스케줄러 정지 및 자원 해제가 자동으로 수행됨
 }
 
 void CRunStopSequenceDlg::DoDataExchange(CDataExchange* pDX)
@@ -108,44 +104,23 @@ BOOL CRunStopSequenceDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// 1. IO 객체 초기화
-	// IO는 다이얼로그가 유일하게 소유하므로 unique_ptr 유지
-	m_pMmceIo = std::make_unique<CMmceIo>();
+	// 1. AppContext 생성 및 초기화 (모든 시스템 객체가 여기서 생성됨)
+    m_pContext = std::make_unique<AppContext>();
 
-	// 정적 메서드를 통한 IO 설정 (전역 설정이므로 주의 필요)
-	COPSwitch::setIo(m_pMmceIo.get());
+    // 2. 필요한 객체 참조 가져오기
+    m_pStartSwitch = m_pContext->GetStartSwitch();
+    auto pRobot = m_pContext->GetRobot();
 
-	// 2. 스위치 및 로봇 객체 초기화
-	// Scheduler와 공유하기 위해 shared_ptr로 생성
-	m_pStartSwitch = std::make_shared<COPSwitch>("StartSwitch");
-	m_pStartSwitch->setOption(IOPSwitch::EType::TOGGLE);
-
-	// Robot은 StartSwitch를 참조함
-	m_pRobot = std::make_shared<CRobot>(*m_pStartSwitch);
-
-	m_pStartSwitch->attach(this);
-	m_pRobot->attach(this);
-
-	// --- 스레드 풀 및 스케줄러 초기화 ---
-	// 1. CTPL 스레드 풀 생성 (예: 하드웨어 코어 수만큼)
-	unsigned int core_count = std::thread::hardware_concurrency();
-	m_pThreadPool = std::make_unique<ctpl::thread_pool>(core_count > 0 ? core_count : 4);
-
-	// 2. 스케줄러 생성 (예: 10ms 주기)
-	m_pScheduler = std::make_unique<Scheduler>(*m_pThreadPool, std::chrono::milliseconds(10));
-
-	// 3. 스케줄러에 작업 등록
-	// 리팩토링: 복잡한 캐스팅 제거 및 안전한 변환 사용
-	
-	// IOPSwitch 인터페이스를 IPeriodicTask로 변환 (COPSwitch는 둘 다 상속받음)
-	// dynamic_pointer_cast를 사용하면 안전하게 형변환된 shared_ptr을 얻을 수 있습니다.
-	m_pScheduler->addTask(m_pStartSwitch); 
-
-	// CRobot은 IPeriodicTask를 상속받으므로 암시적 변환 가능
-	m_pScheduler->addTask(m_pRobot);
+	// 3. Observer 등록 (UI 업데이트를 위해)
+    // IOPSwitch 인터페이스에는 attach가 없으므로 dynamic_cast 사용 (또는 IOPSwitch 수정 후 직접 호출)
+	if (auto pSubject = dynamic_cast<CSubject*>(m_pStartSwitch.get()))
+	{
+		pSubject->attach(this);
+	}
+	pRobot->attach(this);
 
 	// 4. 스케줄러 시작
-	m_pScheduler->start();
+    m_pContext->StartScheduler();
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -243,12 +218,17 @@ void CRunStopSequenceDlg::OnDestroy()
 
 void CRunStopSequenceDlg::OnBnClickedRun()
 {
-	// 스위치 상태만 변경. sequence()는 스케줄러가 주기적으로 실행함.
-	m_pStartSwitch->setSwitchStatus(true);
+    // Context에서 가져온 스위치 객체 사용
+	if (m_pStartSwitch)
+    {
+        m_pStartSwitch->setSwitchStatus(true);
+    }
 }
 
 void CRunStopSequenceDlg::OnBnClickedStop()
 {
-	// 스위치 상태만 변경.
-	m_pStartSwitch->setSwitchStatus(false);
+	if (m_pStartSwitch)
+    {
+        m_pStartSwitch->setSwitchStatus(false);
+    }
 }

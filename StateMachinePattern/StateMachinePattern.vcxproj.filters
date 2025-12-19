@@ -116,6 +116,7 @@
       <Filter>Actuator\Cylinder</Filter>
     </ClInclude>
     <ClInclude Include="RunStopSequenceg.h" />
+    <ClInclude Include="AppContext.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Actuator">

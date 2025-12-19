@@ -188,6 +188,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppContext.h" />
     <ClInclude Include="CAxisController.h" />
     <ClInclude Include="CCylinderBase.h" />
     <ClInclude Include="CGripperCylinder.h" />
